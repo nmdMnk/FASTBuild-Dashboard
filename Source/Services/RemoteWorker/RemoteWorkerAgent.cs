@@ -14,6 +14,8 @@ namespace FastBuild.Dashboard.Services.RemoteWorker
         public string User { get; private set; }
         public string HostName { get; private set; }
         public string IPv4Address { get; private set; }
+        public string DomainName { get; private set; }
+        public string FQDN { get; private set; }
         public string CPUs { get; private set; }
         public string Memory { get; private set; }
         public string Mode { get; private set; }

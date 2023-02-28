@@ -57,11 +57,12 @@
       <HintPath>packages\Costura.Fody.1.6.2\lib\dotnet\Costura.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
+    <Reference Include="MaterialDesignColors, Version=2.0.4.3, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>packages\MaterialDesignColors.2.0.4\lib\net452\MaterialDesignColors.dll</HintPath>
     </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=4.3.0.3, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>packages\MaterialDesignThemes.4.3.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -140,6 +141,8 @@
       <DependentUpon>VisualStudio.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Build\SourceEditor\VisualStudioCode.cs" />
+    <Compile Include="Services\RemoteWorker\IRemoteWorkerAgent.cs" />
+    <Compile Include="Services\RemoteWorker\RemoteWorkerAgent.cs" />
     <Compile Include="Services\Worker\WorkerThreshold.cs" />
     <Compile Include="ShadowContext.cs" />
     <Compile Include="Support\MathEx.cs" />
@@ -167,6 +170,8 @@
     <Compile Include="Support\MouseWheelGesture.cs" />
     <Compile Include="Support\SimpleCommand.cs" />
     <Compile Include="ViewModels\About\AboutViewModel.cs" />
+    <Compile Include="ViewModels\Broker\BrokerViewModel.cs" />
+    <Compile Include="ViewModels\Broker\RemoteWorkerModel.cs" />
     <Compile Include="ViewModels\Build\BuildErrorGroup.cs" />
     <Compile Include="ViewModels\Build\BuildErrorInfo.cs" />
     <Compile Include="ViewModels\Build\BuildInitiatorProcessViewModel.cs" />
@@ -190,6 +195,9 @@
     <Compile Include="ViewModels\Worker\WorkerViewModel.cs" />
     <Compile Include="Views\About\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Broker\BrokerView.xaml.cs">
+      <DependentUpon>BrokerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Build\BuildSessionStatusView.xaml.cs">
       <DependentUpon>BuildSessionStatusView.xaml</DependentUpon>
@@ -239,6 +247,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\About\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Broker\BrokerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -357,6 +369,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\Fody.2.0.0\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Fody.2.0.0\build\dotnet\Fody.targets'))" />
     <Error Condition="!Exists('packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets'))" />
+    <Error Condition="!Exists('packages\MaterialDesignThemes.4.3.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\MaterialDesignThemes.4.3.0\build\MaterialDesignThemes.targets'))" />
   </Target>
   <Import Project="packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets" Condition="Exists('packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" />
+  <Import Project="packages\MaterialDesignThemes.4.3.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.4.3.0\build\MaterialDesignThemes.targets')" />
 </Project>

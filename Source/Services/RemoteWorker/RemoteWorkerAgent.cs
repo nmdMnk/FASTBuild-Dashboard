@@ -14,8 +14,6 @@ namespace FastBuild.Dashboard.Services.RemoteWorker
         public string User { get; private set; }
         public string HostName { get; private set; }
         public string IPv4Address { get; private set; }
-        public string DomainName { get; private set; }
-        public string FQDN { get; private set; }
         public string CPUs { get; private set; }
         public string Memory { get; private set; }
         public string Mode { get; private set; }
@@ -30,33 +28,21 @@ namespace FastBuild.Dashboard.Services.RemoteWorker
             RemoteWorkerAgent worker = new RemoteWorkerAgent();
             worker.FilePath = filePath;
 
-            try
+            foreach (string line in File.ReadAllLines(filePath))
             {
-                foreach (string line in File.ReadAllLines(filePath))
+                try
                 {
-                    string propertyName = "";
-                    string propertyValue = "";
+                    string[] data = line.Split(':');
+                    string propertyName = data[0].Trim().Replace(" ", "");
+                    string propertyValue = data[1].Trim();
 
-                    try
-                    {
-                        string[] data = line.Split(':');
-                        propertyName = data[0].Trim().Replace(" ", "");
-                        propertyValue = data[1].Trim();
-
-                        PropertyInfo property = typeof(RemoteWorkerAgent).GetProperty(propertyName);
-                        property.SetValue(worker, propertyValue);
-                    }
-                    catch
-                    {
-                        //Console.WriteLine($"WARNING: {filePath} has invalid values (Property: {propertyName} - Value: {propertyValue}).");
-                        return null;
-                    }
+                    PropertyInfo property = typeof(RemoteWorkerAgent).GetProperty(propertyName);
+                    property.SetValue(worker, propertyValue);
                 }
-            }
-            catch
-            {
-                //Console.WriteLine($"WARNING: {filePath} is not valid.");
-                return null;
+                catch
+                {
+                    return null;
+                }
             }
 
             if (worker.HostName == Dns.GetHostName())

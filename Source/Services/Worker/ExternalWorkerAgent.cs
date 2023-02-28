@@ -1,19 +1,22 @@
-﻿using System;
+﻿using FastBuild.Dashboard.Services.RemoteWorker;
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Management;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Reflection;
 using System.Windows;
-using System.Management;
 
 namespace FastBuild.Dashboard.Services.Worker
 {
-	internal partial class ExternalWorkerAgent : IWorkerAgent
+    internal partial class ExternalWorkerAgent : IWorkerAgent
 	{
 		private const string WorkerExecutablePath = @"FBuild\FBuildWorker.exe";
+
+		private IRemoteWorkerAgent _localWorker;
 
 		private IntPtr _workerWindowPtr;
 		private uint _workerProcessId;
@@ -34,9 +37,12 @@ namespace FastBuild.Dashboard.Services.Worker
             _hasAppExited = true;
 
 			KillProcessAndChildren((int)_workerProcessId);
-		}
 
-		public void Initialize()
+			if (_localWorker != null && File.Exists(_localWorker.FilePath))
+				File.Delete(_localWorker.FilePath);
+        }
+
+        public void Initialize()
 		{
 			_workerWindowPtr = this.FindExistingWorkerWindow();
 			if (_workerWindowPtr == IntPtr.Zero)
@@ -310,7 +316,16 @@ namespace FastBuild.Dashboard.Services.Worker
 			WinAPIUtils.SetComboBoxSelectedIndex(comboBoxPtr, (int)mode);
 		}
 
-        private static void KillProcessAndChildren(int pid)
+		public void SetLocalWorker(IRemoteWorkerAgent worker)
+        {
+			if (_localWorker != null)
+				return;
+
+			_localWorker = worker;
+        }
+
+
+		private static void KillProcessAndChildren(int pid)
         {
             // Cannot close 'system idle process'.
             if (pid == 0)

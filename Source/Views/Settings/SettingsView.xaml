@@ -19,7 +19,7 @@
 
             <Style TargetType="TextBlock"
                    x:Key="SectionTitle"
-                   BasedOn="{StaticResource MaterialDesignHeadlineTextBlock}">
+                   BasedOn="{StaticResource MaterialDesignHeadline5TextBlock}">
                 <Setter Property="Margin" Value="0 0 0 24" />
             </Style>
 

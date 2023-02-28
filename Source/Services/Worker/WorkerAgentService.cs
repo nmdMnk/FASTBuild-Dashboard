@@ -1,5 +1,6 @@
 ﻿using System;
 using FastBuild.Dashboard.Configuration;
+using FastBuild.Dashboard.Services.RemoteWorker;
 
 namespace FastBuild.Dashboard.Services.Worker
 {
@@ -84,5 +85,7 @@ namespace FastBuild.Dashboard.Services.Worker
 		}
 
 		public WorkerCoreStatus[] GetStatus() => _workerAgent.GetStatus();
+
+		public void SetLocalWorker(IRemoteWorkerAgent worker) => _workerAgent.SetLocalWorker(worker);
 	}
 }

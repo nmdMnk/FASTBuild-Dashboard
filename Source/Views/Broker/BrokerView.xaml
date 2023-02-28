@@ -22,7 +22,7 @@
 
                     <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}"
                                VerticalAlignment="Center"
-                               Text="Broker agents" />
+                               Text="Broker" />
                 </Grid>
             </Border>
 
@@ -31,8 +31,9 @@
                           HorizontalAlignment="Stretch">
 
                 <Grid HorizontalAlignment="Stretch">
-                    <DataGrid x:Name="WorkerList" IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" HorizontalAlignment="Stretch" ItemsSource="{Binding WorkerList}">
+                    <DataGrid x:Name="WorkerList" IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" HorizontalAlignment="Stretch" ItemsSource="{Binding WorkerList, Mode=TwoWay}">
                         <DataGrid.Columns>
+                            <DataGridTextColumn Width="1*" Header="Host Name" Binding="{Binding HostName}" />
                             <DataGridTextColumn Width="1*" Header="Host Name" Binding="{Binding HostName}" />
                             <DataGridTextColumn Width="1*" Header="IP Address" Binding="{Binding IPv4Address}" />
                             <DataGridTextColumn Width="1*" Header="User" Binding="{Binding User}" />

@@ -86,10 +86,8 @@ namespace FastBuild.Dashboard.Services
                     foreach (string workerFile in WorkerNames)
                     {
                         IRemoteWorkerAgent worker = RemoteWorkerAgent.CreateFromFile(workerFile);
-						if (worker == null)
-							continue;
-
-						remoteWorkers.Add(worker);
+						if (worker != null)
+							remoteWorkers.Add(worker);
 
 						if (worker.IsLocal)
                         {

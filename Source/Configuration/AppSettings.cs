@@ -18,7 +18,7 @@ namespace FastBuild.Dashboard.Configuration
 		public int WorkerCores { get; set; } = -1;
 		public int WorkerThreshold { get; set; } = 2;
 		public int WorkerMode { get; set; } = (int)Services.Worker.WorkerMode.WorkWhenIdle;
-		public bool StartWithWindows { get; set; } = true;
+		//public bool StartWithWindows { get; set; } = true;
 		public string ExternalSourceEditorPath { get; set; }
 		public string ExternalSourceEditorArgs { get; set; }
 		public string ExternalSourceEditorAdditionalArgs { get; set; }

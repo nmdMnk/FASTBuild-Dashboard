@@ -71,9 +71,10 @@ namespace FastBuild.Dashboard
 			return true;
 		}
 
+		/*
 		public bool SetStartupWithWindows(bool startUp)
 		{
-			var key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+			var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 			var entryAssembly = Assembly.GetEntryAssembly();
 
 			if (key != null && !string.IsNullOrEmpty(entryAssembly.Location))
@@ -99,6 +100,7 @@ namespace FastBuild.Dashboard
 
 			return false;
 		}
+		*/
 
 		public void ProcessArgs(string[] args)
 		{

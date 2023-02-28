@@ -91,6 +91,7 @@ namespace FastBuild.Dashboard.ViewModels.Settings
         }
         public string DisplayCores => this.WorkerCores == 1 ? "1 core" : $"up to {this.WorkerCores} cores";
 
+		/*
         public bool StartWithWindows
 		{
 			get => AppSettings.Default.StartWithWindows;
@@ -102,7 +103,7 @@ namespace FastBuild.Dashboard.ViewModels.Settings
 				this.NotifyOfPropertyChange();
 			}
 		}
-
+		*/
 
 		public int MaximumCores { get; }
 		public DoubleCollection CoreTicks { get; }

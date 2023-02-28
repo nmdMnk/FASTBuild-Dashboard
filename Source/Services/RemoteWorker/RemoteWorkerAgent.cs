@@ -30,21 +30,33 @@ namespace FastBuild.Dashboard.Services.RemoteWorker
             RemoteWorkerAgent worker = new RemoteWorkerAgent();
             worker.FilePath = filePath;
 
-            foreach (string line in File.ReadAllLines(filePath))
+            try
             {
-                try
+                foreach (string line in File.ReadAllLines(filePath))
                 {
-                    string[] data = line.Split(':');
-                    string propertyName = data[0].Trim().Replace(" ", "");
-                    string propertyValue = data[1].Trim();
+                    string propertyName = "";
+                    string propertyValue = "";
 
-                    PropertyInfo property = typeof(RemoteWorkerAgent).GetProperty(propertyName);
-                    property.SetValue(worker, propertyValue);
+                    try
+                    {
+                        string[] data = line.Split(':');
+                        propertyName = data[0].Trim().Replace(" ", "");
+                        propertyValue = data[1].Trim();
+
+                        PropertyInfo property = typeof(RemoteWorkerAgent).GetProperty(propertyName);
+                        property.SetValue(worker, propertyValue);
+                    }
+                    catch
+                    {
+                        //Console.WriteLine($"WARNING: {filePath} has invalid values (Property: {propertyName} - Value: {propertyValue}).");
+                        return null;
+                    }
                 }
-                catch
-                {
-                    return null;
-                }
+            }
+            catch
+            {
+                //Console.WriteLine($"WARNING: {filePath} is not valid.");
+                return null;
             }
 
             if (worker.HostName == Dns.GetHostName())

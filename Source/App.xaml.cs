@@ -71,6 +71,7 @@ namespace FastBuild.Dashboard
 			return true;
 		}
 
+		/*
 		public bool SetStartupWithWindows(bool startUp)
 		{
 			var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
@@ -99,6 +100,7 @@ namespace FastBuild.Dashboard
 
 			return false;
 		}
+		*/
 
 		public void ProcessArgs(string[] args)
 		{

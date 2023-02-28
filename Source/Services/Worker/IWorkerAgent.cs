@@ -7,7 +7,8 @@ namespace FastBuild.Dashboard.Services.Worker
 		event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;
 		bool IsRunning { get; }
 		void SetCoreCount(int coreCount);
-		void SetWorkerMode(WorkerMode mode);
+        void SetThresholdValue(int threshold);
+        void SetWorkerMode(WorkerMode mode);
 		void Initialize();
 		WorkerCoreStatus[] GetStatus();
 	}

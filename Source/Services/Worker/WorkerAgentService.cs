@@ -12,7 +12,7 @@ namespace FastBuild.Dashboard.Services.Worker
 				var cores = AppSettings.Default.WorkerCores;
 				if (cores <= 0)
 				{
-					cores = Environment.ProcessorCount / 2;
+					cores = Environment.ProcessorCount;
 				}
 
 				return cores;
@@ -28,6 +28,21 @@ namespace FastBuild.Dashboard.Services.Worker
 				}
 			}
 		}
+
+		public int WorkerThreshold
+        {
+			get => AppSettings.Default.WorkerThreshold;
+			set
+            {
+                AppSettings.Default.WorkerThreshold = value;
+                AppSettings.Default.Save();
+
+                if (_workerAgent.IsRunning)
+                {
+                    _workerAgent.SetThresholdValue(this.WorkerThreshold);
+                }
+            }
+        }
 
 		public WorkerMode WorkerMode
 		{

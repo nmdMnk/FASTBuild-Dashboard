@@ -15,7 +15,7 @@ namespace FastBuild.Dashboard.ViewModels.Settings
 	{
 		public event EventHandler<WorkerMode> WorkerModeChanged;
 
-		[CustomValidation(typeof(SettingsValidator), "ValidateBrokeragePath")]
+		[CustomValidation(typeof(SettingsValidator), "ValidateFolderPath")]
 		public string BrokeragePath
 		{
 			get => IoC.Get<IBrokerageService>().BrokeragePath;
@@ -24,9 +24,20 @@ namespace FastBuild.Dashboard.ViewModels.Settings
 				IoC.Get<IBrokerageService>().BrokeragePath = value;
 				this.NotifyOfPropertyChange();
 			}
-		}
+        }
 
-		public string DisplayWorkersInPool
+        [CustomValidation(typeof(SettingsValidator), "ValidateFolderPath")]
+        public string CachePath
+        {
+            get => Environment.GetEnvironmentVariable("FASTBUILD_CACHE_PATH");
+			set
+            {
+				Environment.SetEnvironmentVariable("FASTBUILD_CACHE_PATH", value);
+				this.NotifyOfPropertyChange();
+            }
+        }
+
+        public string DisplayWorkersInPool
 		{
 			get
 			{
@@ -51,10 +62,24 @@ namespace FastBuild.Dashboard.ViewModels.Settings
 				IoC.Get<IWorkerAgentService>().WorkerMode = (WorkerMode)value;
 				this.WorkerModeChanged?.Invoke(this, (WorkerMode)value);
 				this.NotifyOfPropertyChange();
-			}
-		}
+                this.NotifyOfPropertyChange(nameof(this.WorkerThresholdEnabled));
+            }
+        }
 
-		public int WorkerCores
+		public bool WorkerThresholdEnabled => IoC.Get<IWorkerAgentService>().WorkerMode == Services.Worker.WorkerMode.WorkWhenIdle;
+		public int WorkerThreshold
+		{
+            get => (int)IoC.Get<IWorkerAgentService>().WorkerThreshold;
+            set
+            {
+                IoC.Get<IWorkerAgentService>().WorkerThreshold = value;
+                this.NotifyOfPropertyChange();
+                this.NotifyOfPropertyChange(nameof(this.DisplayThreshold));
+            }
+        }
+        public string DisplayThreshold => $"{this.WorkerThreshold * 10}%";
+
+        public int WorkerCores
 		{
 			get => IoC.Get<IWorkerAgentService>().WorkerCores;
 			set
@@ -63,9 +88,10 @@ namespace FastBuild.Dashboard.ViewModels.Settings
 				this.NotifyOfPropertyChange();
 				this.NotifyOfPropertyChange(nameof(this.DisplayCores));
 			}
-		}
+        }
+        public string DisplayCores => this.WorkerCores == 1 ? "1 core" : $"up to {this.WorkerCores} cores";
 
-		public bool StartWithWindows
+        public bool StartWithWindows
 		{
 			get => AppSettings.Default.StartWithWindows;
 			set
@@ -77,7 +103,6 @@ namespace FastBuild.Dashboard.ViewModels.Settings
 			}
 		}
 
-		public string DisplayCores => this.WorkerCores == 1 ? "1 core" : $"up to {this.WorkerCores} cores";
 
 		public int MaximumCores { get; }
 		public DoubleCollection CoreTicks { get; }
@@ -102,17 +127,29 @@ namespace FastBuild.Dashboard.ViewModels.Settings
 
 		public void BrowseBrokeragePath()
 		{
-			var dialog = new VistaFolderBrowserDialog
-			{
-				Description = "Browse Brokerage Path",
-				SelectedPath = this.BrokeragePath,
-				ShowNewFolderButton = false
-			};
+            this.BrokeragePath = BrowseFolderPath("Browse Cache Path", this.BrokeragePath);
+        }
 
-			if (dialog.ShowDialog(App.Current.MainWindow) == true)
-			{
-				this.BrokeragePath = dialog.SelectedPath;
-			}
-		}
+		public void BrowseCachePath()
+        {
+			this.CachePath = BrowseFolderPath("Browse Cache Path", this.CachePath);
+        }
+
+		private string BrowseFolderPath(string description, string selectedPath)
+        {
+            var dialog = new VistaFolderBrowserDialog
+            {
+                Description = description,
+                SelectedPath = selectedPath,
+                ShowNewFolderButton = false
+            };
+
+            if (dialog.ShowDialog(App.Current.MainWindow) == true)
+            {
+                return dialog.SelectedPath;
+            }
+
+			return null;
+        }
 	}
 }

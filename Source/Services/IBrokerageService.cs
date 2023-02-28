@@ -2,11 +2,12 @@
 
 namespace FastBuild.Dashboard.Services
 {
-	internal interface IBrokerageService
+    internal interface IBrokerageService
     {
-		string[] WorkerNames { get; }
-		string BrokeragePath { get; set; }
+        string[] WorkerNames { get; }
+        string BrokeragePath { get; set; }
 
-		event EventHandler WorkerCountChanged;
+        event EventHandler<WorkerListChangedEventArgs> WorkerListChanged;
+        event EventHandler WorkerCountChanged;
     }
 }

@@ -3,6 +3,7 @@ using FastBuild.Dashboard.ViewModels.About;
 using FastBuild.Dashboard.ViewModels.Build;
 using FastBuild.Dashboard.ViewModels.Settings;
 using FastBuild.Dashboard.ViewModels.Worker;
+using FastBuild.Dashboard.ViewModels.Broker;
 
 namespace FastBuild.Dashboard.ViewModels
 {
@@ -11,7 +12,8 @@ namespace FastBuild.Dashboard.ViewModels
 		private IMainPage _currentPage;
 		public BuildWatcherViewModel BuildWatcherPage { get; } = new BuildWatcherViewModel();
 		public WorkerViewModel WorkerPage { get; } = new WorkerViewModel();
-		public SettingsViewModel SettingsPage { get; } = new SettingsViewModel();
+        public BrokerViewModel BrokerPage { get; } = new BrokerViewModel();
+        public SettingsViewModel SettingsPage { get; } = new SettingsViewModel();
 		public AboutViewModel AboutPage { get; } = new AboutViewModel();
 
 		public IMainPage CurrentPage
@@ -33,7 +35,8 @@ namespace FastBuild.Dashboard.ViewModels
 		{
 			this.Items.Add(this.BuildWatcherPage);
 			this.Items.Add(this.WorkerPage);
-			this.Items.Add(this.SettingsPage);
+            this.Items.Add(this.BrokerPage);
+            this.Items.Add(this.SettingsPage);
 			this.Items.Add(this.AboutPage);
 
 			this.CurrentPage = this.BuildWatcherPage;

@@ -88,14 +88,18 @@ namespace FastBuild.Dashboard.ViewModels.Worker
 
 		public void UpdateStatus(WorkerCoreStatus status)
 		{
-			_status = status;
-			this.NotifyOfPropertyChange(nameof(this.HostHelping));
-			this.NotifyOfPropertyChange(nameof(this.WorkingItem));
-			this.NotifyOfPropertyChange(nameof(this.UIBulbBorderColor));
-			this.NotifyOfPropertyChange(nameof(this.UIBulbFillColor));
-			this.NotifyOfPropertyChange(nameof(this.UIBulbForeground));
-			this.NotifyOfPropertyChange(nameof(this.IsWorking));
-			this.NotifyOfPropertyChange(nameof(this.DisplayState));
+            try
+            {
+                _status = status;
+                this.NotifyOfPropertyChange(nameof(this.HostHelping));
+                this.NotifyOfPropertyChange(nameof(this.WorkingItem));
+                this.NotifyOfPropertyChange(nameof(this.UIBulbBorderColor));
+                this.NotifyOfPropertyChange(nameof(this.UIBulbFillColor));
+                this.NotifyOfPropertyChange(nameof(this.UIBulbForeground));
+                this.NotifyOfPropertyChange(nameof(this.IsWorking));
+                this.NotifyOfPropertyChange(nameof(this.DisplayState));
+            }
+			catch { }
 		}
 	}
 }

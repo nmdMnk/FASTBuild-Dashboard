@@ -7,11 +7,11 @@ namespace FastBuild.Dashboard.ViewModels.Settings
 {
 	public class SettingsValidator
 	{
-		public static ValidationResult ValidateBrokeragePath(string brokeragePath, ValidationContext context)
+		public static ValidationResult ValidateFolderPath(string folderPath, ValidationContext context)
 		{
-			if (!Directory.Exists(brokeragePath))
+			if (!Directory.Exists(folderPath))
 			{
-				return new ValidationResult("brokerage path not existed", new[] { nameof(SettingsViewModel.BrokeragePath) });
+				return new ValidationResult("folder path not existed", new[] { nameof(SettingsViewModel.BrokeragePath) });
 			}
 
 			return ValidationResult.Success;

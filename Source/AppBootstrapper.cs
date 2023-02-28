@@ -38,13 +38,15 @@ namespace FastBuild.Dashboard
 		}
 
 		protected override void OnStartup(object sender, StartupEventArgs e)
-		{		
+		{	
+			/*
 			if (!App.Current.IsShadowProcess)
 			{
 				// a shadow process is always started by a non-shadow process, which
 				// should already have the startup registry value set
 				App.Current.SetStartupWithWindows(AppSettings.Default.StartWithWindows);
 			}
+			*/
 
 #if DEBUG && !DEBUG_SINGLE_INSTANCE
 			this.DisplayRootViewFor<MainWindowViewModel>();

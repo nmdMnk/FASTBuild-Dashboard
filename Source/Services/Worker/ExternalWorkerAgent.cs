@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows;
+using System.Management;
 
 namespace FastBuild.Dashboard.Services.Worker
 {
@@ -28,7 +29,12 @@ namespace FastBuild.Dashboard.Services.Worker
 			Application.Current.Exit += this.Application_Exit;
 		}
 
-		private void Application_Exit(object sender, ExitEventArgs e) => _hasAppExited = true;
+		private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            _hasAppExited = true;
+
+			KillProcessAndChildren((int)_workerProcessId);
+		}
 
 		public void Initialize()
 		{
@@ -267,7 +273,7 @@ namespace FastBuild.Dashboard.Services.Worker
 
 		public void SetCoreCount(int coreCount)
 		{
-			var comboBoxPtr = this.GetChildWindow(3, "ComboBox");
+			var comboBoxPtr = this.GetChildWindow(5, "ComboBox");
 
 			if (comboBoxPtr == IntPtr.Zero)
 			{
@@ -276,9 +282,22 @@ namespace FastBuild.Dashboard.Services.Worker
 			}
 
 			WinAPIUtils.SetComboBoxSelectedIndex(comboBoxPtr, coreCount - 1);
-		}
+        }
 
-		public void SetWorkerMode(WorkerMode mode)
+        public void SetThresholdValue(int threshold)
+        {
+            var comboBoxPtr = this.GetChildWindow(3, "ComboBox");
+
+            if (comboBoxPtr == IntPtr.Zero)
+            {
+                this.OnWorkerErrorOccurred("An incompatible worker is running");
+                return;
+            }
+
+            WinAPIUtils.SetComboBoxSelectedIndex(comboBoxPtr, threshold - 1);
+        }
+
+        public void SetWorkerMode(WorkerMode mode)
 		{
 			var comboBoxPtr = this.GetChildWindow(1, "ComboBox");
 
@@ -290,5 +309,30 @@ namespace FastBuild.Dashboard.Services.Worker
 
 			WinAPIUtils.SetComboBoxSelectedIndex(comboBoxPtr, (int)mode);
 		}
-	}
+
+        private static void KillProcessAndChildren(int pid)
+        {
+            // Cannot close 'system idle process'.
+            if (pid == 0)
+            {
+                return;
+            }
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                    ("Select * From Win32_Process Where ParentProcessID=" + pid);
+            ManagementObjectCollection moc = searcher.Get();
+            foreach (ManagementObject mo in moc)
+            {
+                KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+            }
+            try
+            {
+                Process proc = Process.GetProcessById(pid);
+                proc.Kill();
+            }
+            catch (ArgumentException)
+            {
+                // Process already exited.
+            }
+        }
+    }
 }

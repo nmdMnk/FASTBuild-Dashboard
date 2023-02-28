@@ -139,6 +139,27 @@
                     </StackPanel>
 
                     <Border Style="{StaticResource Separator}" />
+                    
+                    <TextBlock Style="{StaticResource SectionTitle}"
+                               Text="Cache" />
+
+                    <StackPanel Style="{StaticResource OptionContainer}">
+                        <TextBlock Style="{StaticResource OptionTitle}"
+                                   Text="Cache Path" />
+
+                        <DockPanel Style="{StaticResource OptionContent}">
+                            <Button x:Name="BrowseCachePath"
+                                    DockPanel.Dock="Right"
+                                    Style="{StaticResource OptionRightButton}">
+                                <materialDesign:PackIcon Kind="FolderOutline" />
+                            </Button>
+
+                            <TextBox x:Name="CachePath" 
+                                     VerticalAlignment="Center" />
+                        </DockPanel>
+                    </StackPanel>
+
+                    <Border Style="{StaticResource Separator}" />
 
                     <TextBlock Style="{StaticResource SectionTitle}"
                                Text="Worker" />
@@ -154,6 +175,28 @@
                                 <ComboBoxItem Content="Work Always" />
                             </ComboBox>
                         </Grid>
+                    </StackPanel>
+
+
+                    <StackPanel Style="{StaticResource OptionContainer}">
+                        <TextBlock Style="{StaticResource OptionTitle}"
+                                   Text="Threshold" />
+
+                        <DockPanel Style="{StaticResource OptionContent}">
+                            <TextBlock x:Name="DisplayThreshold"
+                                       DockPanel.Dock="Right"
+                                       Margin="8,0,0,0"
+                                       Text="20%" />
+                            <Slider x:Name="WorkerThreshold"
+                                    Minimum="1"
+                                    Maximum="5"
+                                    Value="{Binding WorkerThreshold, Mode=TwoWay, Delay=500}"
+                                    TickPlacement="BottomRight"
+                                    TickFrequency="1"
+                                    IsSnapToTickEnabled="True"
+                                    IsEnabled="{Binding WorkerThresholdEnabled}"/>
+                        </DockPanel>
+
                     </StackPanel>
 
                     <StackPanel Style="{StaticResource OptionContainer}">

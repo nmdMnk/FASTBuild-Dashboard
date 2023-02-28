@@ -1,13 +1,22 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using FastBuild.Dashboard.Services.RemoteWorker;
+using FastBuild.Dashboard.Services.Worker;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Timers;
 
 namespace FastBuild.Dashboard.Services
 {
-	internal class BrokerageService : IBrokerageService
+    public class WorkerListChangedEventArgs : EventArgs
+    {
+		public HashSet<IRemoteWorkerAgent> RemoteWorkers { get; set; }
+    }
+
+    internal class BrokerageService : IBrokerageService
 	{
-		private const string WorkerPoolRelativePath = @"main\16";
+		private const string WorkerPoolRelativePath = @"main\22.windows";
 
 		private string[] _workerNames;
 
@@ -35,8 +44,9 @@ namespace FastBuild.Dashboard.Services
 		}
 
 		public event EventHandler WorkerCountChanged;
+        public event EventHandler<WorkerListChangedEventArgs> WorkerListChanged;
 
-		public BrokerageService()
+        public BrokerageService()
 		{
 			_workerNames = new string[0];
 
@@ -55,12 +65,14 @@ namespace FastBuild.Dashboard.Services
 				return;
 
 			_isUpdatingWorkers = true;
+			HashSet<IRemoteWorkerAgent> remoteWorkers = new HashSet<IRemoteWorkerAgent>();
 
 			try
 			{
 				var brokeragePath = this.BrokeragePath;
 				if (string.IsNullOrEmpty(brokeragePath))
 				{
+					remoteWorkers = new HashSet<IRemoteWorkerAgent>();
 					this.WorkerNames = new string[0];
 					return;
 				}
@@ -68,17 +80,37 @@ namespace FastBuild.Dashboard.Services
 				try
 				{
 					this.WorkerNames = Directory.GetFiles(Path.Combine(brokeragePath, WorkerPoolRelativePath))
-						.Select(Path.GetFileName)
+						.Select(Path.GetFullPath)
 						.ToArray();
-				}
-				catch (IOException)
-				{
+
+                    foreach (string workerFile in WorkerNames)
+                    {
+                        IRemoteWorkerAgent worker = RemoteWorkerAgent.CreateFromFile(workerFile);
+						if (worker == null)
+							continue;
+
+						remoteWorkers.Add(worker);
+
+						if (worker.IsLocal)
+                        {
+							IoC.Get<IWorkerAgentService>().SetLocalWorker(worker);
+                        }
+					}
+                }
+                catch (IOException)
+                {
+                    remoteWorkers = new HashSet<IRemoteWorkerAgent>();
 					this.WorkerNames = new string[0];
 				}
 			}
 			finally
-			{
-				_isUpdatingWorkers = false;
+            {
+				WorkerListChangedEventArgs args = new WorkerListChangedEventArgs();
+				args.RemoteWorkers = remoteWorkers;
+
+				this.WorkerListChanged?.Invoke(this, args);
+
+                _isUpdatingWorkers = false;
 			}
 		}
 	}

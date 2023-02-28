@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using FastBuild.Dashboard.Configuration;
 using FastBuild.Dashboard.ViewModels;
 using FastBuild.Dashboard.Services.Worker;
+using System.ComponentModel;
 
 namespace FastBuild.Dashboard.Views
 {
@@ -14,6 +15,7 @@ namespace FastBuild.Dashboard.Views
 		private readonly TrayNotifier _trayNotifier;
 		private bool _isWorking;
 		private MainWindowViewModel _viewModel;
+		private bool _isClosingFromXButton = true;
 
 		public MainWindowView()
 		{
@@ -24,7 +26,7 @@ namespace FastBuild.Dashboard.Views
 
 			this.DataContextChanged += this.OnDataContextChanged;
 			this.Loaded += this.OnLoaded;
-		}
+        }
 
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
@@ -32,15 +34,28 @@ namespace FastBuild.Dashboard.Views
 			{
 				this.Hide();
 			}
-		}
+        }
 
-		protected override void OnClosed(EventArgs e)
+		protected override void OnClosing(CancelEventArgs e)
+        {
+			if (_isClosingFromXButton)
+            {
+                e.Cancel = true;
+
+                this.Hide();
+            }
+
+            _isClosingFromXButton = true;
+            base.OnClosing(e);
+        }
+
+        protected override void OnClosed(EventArgs e)
 		{
 			_trayNotifier.Close();
 			base.OnClosed(e);
 		}
 
-		private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			var vm = e.NewValue as MainWindowViewModel;
 			if (vm == null)
@@ -121,10 +136,12 @@ namespace FastBuild.Dashboard.Views
 		{
 			this.StartDelayedProfileUpdate();
 
+			/*
 			if (this.WindowState == WindowState.Minimized)
 			{
 				this.Hide();
 			}
+			*/
 		}
 
 		private void StartDelayedProfileUpdate()
@@ -147,6 +164,12 @@ namespace FastBuild.Dashboard.Views
 		{
 			this.MenuToggleButton.IsChecked = false;
 		}
+
+		public void CloseApplication()
+        {
+			_isClosingFromXButton = false;
+			this.Close();
+        }
 
 		public void ShowAndActivate()
 		{

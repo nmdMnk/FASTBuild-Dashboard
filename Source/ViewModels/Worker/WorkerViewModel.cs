@@ -10,7 +10,7 @@ namespace FastBuild.Dashboard.ViewModels.Worker
 		private readonly IWorkerAgentService _workerAgentService;
 		private string _workerErrorMessage;
 		private string _statusTitle;
-		public string DisplayName => "Worker";
+		public string DisplayName => "Local Worker";
 
 		public bool IsWorkerRunning => _workerAgentService.IsRunning;
 

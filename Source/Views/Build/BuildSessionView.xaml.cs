@@ -23,14 +23,14 @@ namespace FastBuild.Dashboard.Views.Build
 			_previousHorizontalScrollOffset = this.ContentScrollViewer.ScrollableWidth;
 			BuildSessionView.BuildViewportService.BuildJobDisplayModeChanged += this.BuildViewportService_BuildJobDisplayModeChanged;
 			this.NotifyVerticalViewRangeChanged();
-		}
+        }
 
-		private void BuildViewportService_BuildJobDisplayModeChanged(object sender, EventArgs e)
-		{
-			// when this event is triggered, the layout of header/background is not updated immediately.
-			// we use a one-shot timer to delay a synchronization among scroll viewers
+        private void BuildViewportService_BuildJobDisplayModeChanged(object sender, EventArgs e)
+        {
+            // when this event is triggered, the layout of header/background is not updated immediately.
+            // we use a one-shot timer to delay a synchronization among scroll viewers
 
-			var t = new DispatcherTimer();
+            var t = new DispatcherTimer();
 
 			void Callback(object callbackSender, EventArgs callbackArgs)
 			{
@@ -95,24 +95,27 @@ namespace FastBuild.Dashboard.Views.Build
 		}
 
 		private void UserControl_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-		{
-			var buildViewportService = IoC.Get<IBuildViewportService>();
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                var buildViewportService = IoC.Get<IBuildViewportService>();
 
-			var relativePosition = e.GetPosition(this);
-			var proportion = relativePosition.X / this.ActualWidth;
+                var relativePosition = e.GetPosition(this);
+                var proportion = relativePosition.X / this.ActualWidth;
 
-			var fixedTime = buildViewportService.ViewStartTimeOffsetSeconds
-			                + (buildViewportService.ViewEndTimeOffsetSeconds - buildViewportService.ViewStartTimeOffsetSeconds)
-			                * proportion;
+                var fixedTime = buildViewportService.ViewStartTimeOffsetSeconds
+                                + (buildViewportService.ViewEndTimeOffsetSeconds - buildViewportService.ViewStartTimeOffsetSeconds)
+                                * proportion;
 
-			buildViewportService.Scaling = buildViewportService.Scaling * (1 + e.Delta / 1200.0);
+                buildViewportService.Scaling = buildViewportService.Scaling * (1 + e.Delta / 1200.0);
 
-			var startTime = fixedTime - this.ContentScrollViewer.ActualWidth / buildViewportService.Scaling * proportion;
+                var startTime = fixedTime - this.ContentScrollViewer.ActualWidth / buildViewportService.Scaling * proportion;
 
-			this.ContentScrollViewer.ScrollToHorizontalOffset(startTime * buildViewportService.Scaling + this.HeaderViewWidth);
+                this.ContentScrollViewer.ScrollToHorizontalOffset(startTime * buildViewportService.Scaling + this.HeaderViewWidth);
 
-			e.Handled = true;
-		}
+                e.Handled = true;
+            }
+        }
 
 		private void BuildJobsView_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e) 
 			=> this.NotifyVerticalViewRangeChanged();

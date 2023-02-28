@@ -31,11 +31,12 @@ namespace FastBuild.Dashboard.Views
 			_trayNotifier.ContextMenuStrip = new WinForms.ContextMenuStrip();
 			_trayNotifier.ContextMenuStrip.Items.Add("Show", GetImage("/Resources/Icons/tray_normal_16.ico"), this.TrayNotifier_DoubleClick);
 			_trayNotifier.ContextMenuStrip.Items.Add(new WinForms.ToolStripSeparator());
-			_trayNotifier.ContextMenuStrip.Items.Add("Work Always", GetImage("/Resources/Icons/tray_working_all_16.ico"), (sender, args) => MenuChangeWorkerMode(2));
-			_trayNotifier.ContextMenuStrip.Items.Add("Work when Idle", GetImage("/Resources/Icons/tray_normal_16.ico"), (sender, args) => MenuChangeWorkerMode(1));
+            _trayNotifier.ContextMenuStrip.Items.Add("Work Proportional", GetImage("/Resources/Icons/tray_working_1_16.ico"), (sender, args) => MenuChangeWorkerMode(3));
+            _trayNotifier.ContextMenuStrip.Items.Add("Work Always", GetImage("/Resources/Icons/tray_working_all_16.ico"), (sender, args) => MenuChangeWorkerMode(2));
+			_trayNotifier.ContextMenuStrip.Items.Add("Work When Idle", GetImage("/Resources/Icons/tray_normal_16.ico"), (sender, args) => MenuChangeWorkerMode(1));
 			_trayNotifier.ContextMenuStrip.Items.Add("Disabled", GetImage("/Resources/Icons/tray_disabled_16.ico"), (sender, args) => MenuChangeWorkerMode(0));
             _trayNotifier.ContextMenuStrip.Items.Add(new WinForms.ToolStripSeparator());
-            _trayNotifier.ContextMenuStrip.Items.Add("Exit", GetImage("/Resources/Icons/tray_normal_16.ico"), this.TrayNotifier_Exit);
+            _trayNotifier.ContextMenuStrip.Items.Add("Exit", null, this.TrayNotifier_Exit);
 
             this.UseNormalIcon();
 		}

@@ -168,19 +168,30 @@
                         <TextBlock Style="{StaticResource OptionTitle}"
                                    Text="Mode" />
 
-                        <Grid Style="{StaticResource OptionContent}">
+                        <DockPanel Style="{StaticResource OptionContent}">
+
+                            <Grid IsHitTestVisible="True"
+                                  Background="Transparent"
+                                  DockPanel.Dock="Right"
+                                  Style="{StaticResource OptionRightIcon}"
+                                  ToolTip="Disabled: Worker will accept no tasks&#x0a;Idle: Worker will accept tasks when PC is considered idle&#x0a;Always: Worker will accept tasks regardless of PC state&#x0a;Proportional: Worker will accept tasks proportional to PC's idle CPU power">
+                                <materialDesign:PackIcon Kind="InformationOutline"
+                                                         HorizontalAlignment="Center"/>
+                            </Grid>
+
                             <ComboBox SelectedIndex="{Binding WorkerMode, Mode=TwoWay}">
                                 <ComboBoxItem Content="Disabled" />
-                                <ComboBoxItem Content="Work when Idle" />
+                                <ComboBoxItem Content="Work When Idle" />
                                 <ComboBoxItem Content="Work Always" />
+                                <ComboBoxItem Content="Work Proportional" />
                             </ComboBox>
-                        </Grid>
+                        </DockPanel>
                     </StackPanel>
 
 
                     <StackPanel Style="{StaticResource OptionContainer}">
                         <TextBlock Style="{StaticResource OptionTitle}"
-                                   Text="Threshold" />
+                                   Text="Idle Threshold" />
 
                         <DockPanel Style="{StaticResource OptionContent}">
                             <TextBlock x:Name="DisplayThreshold"

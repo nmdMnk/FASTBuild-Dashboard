@@ -1,4 +1,11 @@
-# FASTBuild Dashboard
+# FASTBuild Dashboard - Nine Worlds Studios Edition
+This is an updated version of the forked FASTBuild Dashboard. The intention is to enhance it with new features and fixes. It is expected that the related fork of [FASTBuild](https://github.com/NineWorldsStudios/FASTBuild) is used for compiling C++ and shaders for Unreal Engine 5.0+.
+
+We are actively using the Dashboard and FASTBuild for Unreal based projects and we plan to continue working on this to work with Unreal Engine 5. 
+
+---
+
+## Original README
 
 FASTBuild ([website](http://www.fastbuild.org/) or [GitHub repository](https://github.com/fastbuild/fastbuild)) is an amazing distributed building system. It can drastically shorten your build time by utilizing its distributed and cached building mechanisms.
 

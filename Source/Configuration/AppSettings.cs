@@ -16,7 +16,7 @@ namespace FastBuild.Dashboard.Configuration
 
 		public override string Domain => AppSettingsDomain;
 		public int WorkerCores { get; set; } = -1;
-		public int WorkerThreshold { get; set; } = 2;
+		public int WorkerThreshold { get; set; } = 5;
 		public int WorkerMode { get; set; } = (int)Services.Worker.WorkerMode.WorkWhenIdle;
 		//public bool StartWithWindows { get; set; } = true;
 		public string ExternalSourceEditorPath { get; set; }

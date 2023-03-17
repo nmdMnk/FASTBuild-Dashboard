@@ -51,7 +51,7 @@ public partial class BuildSessionView
             if (horizontalOffset ==
                 _previousHorizontalScrollOffset) // which means the scroll is not actually changed, but content size is changed
             {
-                ContentScrollViewer.ScrollToHorizontalOffset(ContentScrollViewer.ScrollableWidth);
+                ContentScrollViewer.ScrollToRightEnd();
                 horizontalOffset = ContentScrollViewer.ScrollableWidth;
             }
 

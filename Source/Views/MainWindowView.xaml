@@ -7,8 +7,8 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal" 
-        TextOptions.TextRenderingMode="Auto"        
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Icon="/Resources/Icons/app.ico"
@@ -20,7 +20,8 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -35,7 +36,7 @@
 
         <materialDesign:DrawerHost.LeftDrawerContent>
             <DockPanel MinWidth="212">
-                <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}"
                               DockPanel.Dock="Top"
                               HorizontalAlignment="Right" Margin="16"
                               IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
@@ -56,14 +57,14 @@
         </materialDesign:DrawerHost.LeftDrawerContent>
 
         <Grid>
-            <materialDesign:ColorZone Padding="16" 
+            <materialDesign:ColorZone Padding="16"
                                       Height="{StaticResource TitleColorZoneHeight}"
                                       materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                       VerticalAlignment="Top"
                                       Mode="PrimaryDark">
                 <Grid>
                     <ToggleButton x:Name="MenuToggleButton"
-                                  Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                                  Style="{StaticResource MaterialDesignHamburgerToggleButton}"
                                   HorizontalAlignment="Left"
                                   IsChecked="False" />
                 </Grid>
@@ -77,5 +78,5 @@
 
 
     </materialDesign:DrawerHost>
-    
+
 </Window>

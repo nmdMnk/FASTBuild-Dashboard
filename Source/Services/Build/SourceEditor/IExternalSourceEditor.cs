@@ -1,8 +1,7 @@
-﻿namespace FastBuild.Dashboard.Services.Build.SourceEditor
+﻿namespace FastBuild.Dashboard.Services.Build.SourceEditor;
+
+internal interface IExternalSourceEditor
 {
-	internal interface IExternalSourceEditor
-	{
-		bool IsAvailable { get; }
-		bool OpenFile(string file, int lineNumber, int initiatorProcessId);
-	}
+    bool IsAvailable { get; }
+    bool OpenFile(string file, int lineNumber, int initiatorProcessId);
 }

@@ -1,15 +1,15 @@
-﻿namespace FastBuild.Dashboard.Services.Worker
+﻿namespace FastBuild.Dashboard.Services.Worker;
+
+internal class WorkerCoreStatus
 {
-	internal class WorkerCoreStatus
-	{
-		public WorkerCoreState State { get; }
-		public string HostHelping { get; }
-		public string WorkingItem { get; }
-		public WorkerCoreStatus(WorkerCoreState state, string hostHelping = null, string workingItem = null)
-		{
-			this.State = state;
-			this.HostHelping = hostHelping;
-			this.WorkingItem = workingItem;
-		}
-	}
+    public WorkerCoreStatus(WorkerCoreState state, string hostHelping = null, string workingItem = null)
+    {
+        State = state;
+        HostHelping = hostHelping;
+        WorkingItem = workingItem;
+    }
+
+    public WorkerCoreState State { get; }
+    public string HostHelping { get; }
+    public string WorkingItem { get; }
 }

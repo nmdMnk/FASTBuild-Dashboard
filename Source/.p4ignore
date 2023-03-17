@@ -1,0 +1,6 @@
+Code/FBuild.exe
+Code/fbuild.windows.fdb
+.vs/**
+bin/**
+obj/**
+packages/**

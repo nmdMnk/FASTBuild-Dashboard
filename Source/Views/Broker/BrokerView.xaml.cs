@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace FastBuild.Dashboard.Views.Broker
+namespace FastBuild.Dashboard.Views.Broker;
+
+/// <summary>
+///     Interaction logic for BrokerView.xaml
+/// </summary>
+public partial class BrokerView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for BrokerView.xaml
-    /// </summary>
-    public partial class BrokerView : UserControl
+    public BrokerView()
     {
-        public BrokerView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

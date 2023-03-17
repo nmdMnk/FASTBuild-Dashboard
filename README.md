@@ -3,6 +3,16 @@ This is an updated version of the forked FASTBuild Dashboard. The intention is t
 
 We are actively using the Dashboard and FASTBuild for Unreal based projects and we plan to continue working on this to work with Unreal Engine 5. 
 
+__New Features__
+- Support for Work Proportional in tray
+- Broker Agents View
+
+__New Improvements__
+- Close button sends dashboard to tray (force close only possible via right click)
+- Some UX improvements
+- Removed start with windows (done via installer)
+- Bugfixes
+
 ---
 
 ## Original README

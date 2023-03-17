@@ -1,9 +1,8 @@
-﻿namespace FastBuild.Dashboard.Services.Worker
+﻿namespace FastBuild.Dashboard.Services.Worker;
+
+public enum WorkerCoreState
 {
-	public enum WorkerCoreState
-	{
-		Disabled,
-		Idle,
-		Working
-	}
+    Disabled,
+    Idle,
+    Working
 }

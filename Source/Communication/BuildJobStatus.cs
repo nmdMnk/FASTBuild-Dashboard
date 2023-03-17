@@ -1,15 +1,14 @@
-﻿namespace FastBuild.Dashboard.Communication
+﻿namespace FastBuild.Dashboard.Communication;
+
+internal enum BuildJobStatus
 {
-	internal enum BuildJobStatus
-	{
-		Building,
-		Success,
-		SuccessCached,
-		SuccessPreprocessed,
-		Failed,
-		Error,
-		Timeout,
-		RacedOut,
-		Stopped
-	}
+    Building,
+    Success,
+    SuccessCached,
+    SuccessPreprocessed,
+    Failed,
+    Error,
+    Timeout,
+    RacedOut,
+    Stopped
 }

@@ -1,9 +1,8 @@
-﻿namespace FastBuild.Dashboard.Services.Worker
+﻿namespace FastBuild.Dashboard.Services.Worker;
+
+internal enum WorkerMode
 {
-	internal enum WorkerMode
-	{
-		Disabled = 0,
-		WorkWhenIdle = 1,
-		WorkAlways = 2
-	}
+    Disabled = 0,
+    WorkWhenIdle = 1,
+    WorkAlways = 2
 }

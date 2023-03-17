@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace FastBuild.Dashboard.Views.Build
+namespace FastBuild.Dashboard.Views.Build;
+
+/// <summary>
+///     Interaction logic for BuildJobTooltipView.xaml
+/// </summary>
+public partial class BuildJobTooltipView : UserControl
 {
-	/// <summary>
-	/// Interaction logic for BuildJobTooltipView.xaml
-	/// </summary>
-	public partial class BuildJobTooltipView : UserControl
-	{
-		public BuildJobTooltipView()
-		{
-			InitializeComponent();
-		}
-	}
+    public BuildJobTooltipView()
+    {
+        InitializeComponent();
+    }
 }

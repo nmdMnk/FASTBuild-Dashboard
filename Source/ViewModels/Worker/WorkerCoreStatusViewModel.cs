@@ -1,105 +1,109 @@
 ﻿using System;
-using System.Windows.Media;
+using System.Drawing;
 using Caliburn.Micro;
 using FastBuild.Dashboard.Services.Worker;
 
-namespace FastBuild.Dashboard.ViewModels.Worker
+namespace FastBuild.Dashboard.ViewModels.Worker;
+
+internal class WorkerCoreStatusViewModel : PropertyChangedBase
 {
-	internal class WorkerCoreStatusViewModel : PropertyChangedBase
-	{
-		public int CoreId { get; }
+    private WorkerCoreStatus _status;
 
-		private WorkerCoreStatus _status;
-		public string HostHelping => _status.HostHelping;
-		public string WorkingItem => _status.WorkingItem;
-		public bool IsWorking => _status.State == WorkerCoreState.Working;
+    public WorkerCoreStatusViewModel(int coreId)
+    {
+        CoreId = coreId;
+    }
 
-		public string DisplayState
-		{
-			get
-			{
-				switch (_status.State)
-				{
-					case WorkerCoreState.Disabled:
-						return "Disabled";
-					case WorkerCoreState.Idle:
-						return "Idle";
-					case WorkerCoreState.Working:
-						return "Working";
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-		}
+    public int CoreId { get; }
+    public string HostHelping => _status.HostHelping;
+    public string WorkingItem => _status.WorkingItem;
+    public bool IsWorking => _status.State == WorkerCoreState.Working;
 
-		public Brush UIBulbBorderColor
-		{
-			get
-			{
-				switch (_status.State)
-				{
-					case WorkerCoreState.Disabled:
-						return Brushes.Gray;
-					case WorkerCoreState.Idle:
-					case WorkerCoreState.Working:
-						return Brushes.DarkGreen;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-		}
-
-		public Brush UIBulbFillColor
-		{
-			get
-			{
-				switch (_status.State)
-				{
-					case WorkerCoreState.Disabled:
-					case WorkerCoreState.Idle:
-						return Brushes.Transparent;
-					case WorkerCoreState.Working:
-						return Brushes.Green;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-		}
-
-		public Brush UIBulbForeground
-		{
-			get
-			{
-				switch (_status.State)
-				{
-					case WorkerCoreState.Disabled:
-						return Brushes.Gray;
-					case WorkerCoreState.Idle:
-						return Brushes.Green;
-					case WorkerCoreState.Working:
-						return Brushes.White;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-		}
-
-		public WorkerCoreStatusViewModel(int coreId) => this.CoreId = coreId;
-
-		public void UpdateStatus(WorkerCoreStatus status)
-		{
-            try
+    public string DisplayState
+    {
+        get
+        {
+            switch (_status.State)
             {
-                _status = status;
-                this.NotifyOfPropertyChange(nameof(this.HostHelping));
-                this.NotifyOfPropertyChange(nameof(this.WorkingItem));
-                this.NotifyOfPropertyChange(nameof(this.UIBulbBorderColor));
-                this.NotifyOfPropertyChange(nameof(this.UIBulbFillColor));
-                this.NotifyOfPropertyChange(nameof(this.UIBulbForeground));
-                this.NotifyOfPropertyChange(nameof(this.IsWorking));
-                this.NotifyOfPropertyChange(nameof(this.DisplayState));
+                case WorkerCoreState.Disabled:
+                    return "Disabled";
+                case WorkerCoreState.Idle:
+                    return "Idle";
+                case WorkerCoreState.Working:
+                    return "Working";
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-			catch { }
-		}
-	}
+        }
+    }
+
+    public Brush UIBulbBorderColor
+    {
+        get
+        {
+            switch (_status.State)
+            {
+                case WorkerCoreState.Disabled:
+                    return Brushes.Gray;
+                case WorkerCoreState.Idle:
+                case WorkerCoreState.Working:
+                    return Brushes.DarkGreen;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+
+    public Brush UIBulbFillColor
+    {
+        get
+        {
+            switch (_status.State)
+            {
+                case WorkerCoreState.Disabled:
+                case WorkerCoreState.Idle:
+                    return Brushes.Transparent;
+                case WorkerCoreState.Working:
+                    return Brushes.Green;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+
+    public Brush UIBulbForeground
+    {
+        get
+        {
+            switch (_status.State)
+            {
+                case WorkerCoreState.Disabled:
+                    return Brushes.Gray;
+                case WorkerCoreState.Idle:
+                    return Brushes.Green;
+                case WorkerCoreState.Working:
+                    return Brushes.White;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+
+    public void UpdateStatus(WorkerCoreStatus status)
+    {
+        try
+        {
+            _status = status;
+            this.NotifyOfPropertyChange(nameof(HostHelping));
+            this.NotifyOfPropertyChange(nameof(WorkingItem));
+            this.NotifyOfPropertyChange(nameof(UIBulbBorderColor));
+            this.NotifyOfPropertyChange(nameof(UIBulbFillColor));
+            this.NotifyOfPropertyChange(nameof(UIBulbForeground));
+            this.NotifyOfPropertyChange(nameof(IsWorking));
+            this.NotifyOfPropertyChange(nameof(DisplayState));
+        }
+        catch
+        {
+        }
+    }
 }

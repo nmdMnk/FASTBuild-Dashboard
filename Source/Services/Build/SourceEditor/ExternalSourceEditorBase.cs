@@ -2,36 +2,27 @@
 using System.IO;
 using FastBuild.Dashboard.Configuration;
 
-namespace FastBuild.Dashboard.Services.Build.SourceEditor
+namespace FastBuild.Dashboard.Services.Build.SourceEditor;
+
+internal abstract class ExternalSourceEditorBase : IExternalSourceEditor
 {
-	internal abstract class ExternalSourceEditorBase : IExternalSourceEditor
-	{
-		protected static string GetEditorExecutable(string pathInProgramFiles)
-		{
-			if (!string.IsNullOrWhiteSpace(AppSettings.Default.ExternalSourceEditorPath)
-				&& File.Exists(AppSettings.Default.ExternalSourceEditorPath))
-			{
-				return AppSettings.Default.ExternalSourceEditorPath;
-			}
+    public abstract bool IsAvailable { get; }
+    public abstract bool OpenFile(string file, int lineNumber, int initiatorProcessId);
 
-			var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), pathInProgramFiles);
+    protected static string GetEditorExecutable(string pathInProgramFiles)
+    {
+        if (!string.IsNullOrWhiteSpace(AppSettings.Default.ExternalSourceEditorPath)
+            && File.Exists(AppSettings.Default.ExternalSourceEditorPath))
+            return AppSettings.Default.ExternalSourceEditorPath;
 
-			if (File.Exists(path))
-			{
-				return path;
-			}
+        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), pathInProgramFiles);
 
-			path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), pathInProgramFiles);
+        if (File.Exists(path)) return path;
 
-			if (File.Exists(path))
-			{
-				return path;
-			}
+        path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), pathInProgramFiles);
 
-			return null;
-		}
+        if (File.Exists(path)) return path;
 
-		public abstract bool IsAvailable { get; }
-		public abstract bool OpenFile(string file, int lineNumber, int initiatorProcessId);
-	}
+        return null;
+    }
 }

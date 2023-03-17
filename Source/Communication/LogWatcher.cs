@@ -6,123 +6,119 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FastBuild.Dashboard.Communication
+namespace FastBuild.Dashboard.Communication;
+
+internal class LogWatcher
 {
-	internal class LogWatcher
-	{
-		private const string LogRelativePath = @"FASTBuild\FastBuildLog.log";
+    private const string LogRelativePath = @"FASTBuild\FastBuildLog.log";
 
-		private readonly string _logPath;
+    private readonly string _logPath;
+    private readonly List<byte> _messageBuffer = new();
+    private DateTime _currentFileTime;
 
-		public event EventHandler HistoryRestorationStarted;
-		public event EventHandler HistoryRestorationEnded;
+    private long _fileStreamPosition;
 
-		public event EventHandler LogReset;
-		public event EventHandler<string> LogReceived;
-
-		private long _fileStreamPosition;
-		private DateTime _currentFileTime;
-		private readonly List<byte> _messageBuffer = new List<byte>();
-
-		public bool IsRestoringHistory { get; private set; }
-
-		public LogWatcher()
-		{
+    public LogWatcher()
+    {
 #if DEBUG && DEBUG_TEST_LOG
 			_logPath = @"Test\FastBuildLog.log";
 #else
-			var path = Path.GetTempPath();
-			var fastbuildTempPath = Environment.GetEnvironmentVariable("FASTBUILD_TEMP_PATH");
-			if (fastbuildTempPath != null && System.IO.Directory.Exists(fastbuildTempPath))
-			{
-				path = fastbuildTempPath;
-			}
+        var path = Path.GetTempPath();
+        var fastbuildTempPath = Environment.GetEnvironmentVariable("FASTBUILD_TEMP_PATH");
+        if (fastbuildTempPath != null && Directory.Exists(fastbuildTempPath)) path = fastbuildTempPath;
 
-			_logPath = Path.Combine(path, LogRelativePath);
+        _logPath = Path.Combine(path, LogRelativePath);
 #endif
-		}
+    }
 
-		public void Start()
-		{
-			var logDirectory = Path.GetDirectoryName(_logPath);
-			if (!Directory.Exists(logDirectory))
-			{
-				Debug.Assert(logDirectory != null, "logDirectory != null");
-				Directory.CreateDirectory(logDirectory);
-			}
+    public bool IsRestoringHistory { get; private set; }
 
-			if (File.Exists(_logPath))
-			{
-				this.IsRestoringHistory = true;
-				this.HistoryRestorationStarted?.Invoke(this, EventArgs.Empty);
-			}
+    public event EventHandler HistoryRestorationStarted;
+    public event EventHandler HistoryRestorationEnded;
 
-			Task.Factory.StartNew(this.ReadRemainingLogsAsync);
-		}
+    public event EventHandler LogReset;
+    public event EventHandler<string> LogReceived;
 
-		private void ReadRemainingLogsAsync()
-		{
-			_fileStreamPosition = 0;
-			while (true)
-			{
-				if (File.Exists(_logPath))
-				{
-					var fileTime = File.GetLastWriteTime(_logPath);
-					if (fileTime != _currentFileTime		// the log file has been reset or saved (closed)
-						&& new FileInfo(_logPath).Length < _fileStreamPosition)	// this guarantees it is a reset
-					{
-						_fileStreamPosition = 0;
-						this.LogReset?.Invoke(this, EventArgs.Empty);
-						_currentFileTime = fileTime;
-					}
+    public void Start()
+    {
+        var logDirectory = Path.GetDirectoryName(_logPath);
+        if (!Directory.Exists(logDirectory))
+        {
+            Debug.Assert(logDirectory != null, "logDirectory != null");
+            Directory.CreateDirectory(logDirectory);
+        }
 
-					using (var file = new FileStream(_logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-					{
-						var expectedLength = (int)(file.Length - _fileStreamPosition);
+        if (File.Exists(_logPath))
+        {
+            IsRestoringHistory = true;
+            HistoryRestorationStarted?.Invoke(this, EventArgs.Empty);
+        }
 
-						if (expectedLength > 0)
-						{
-							var buffer = new byte[expectedLength];
+        Task.Factory.StartNew(ReadRemainingLogsAsync);
+    }
 
-							file.Seek(_fileStreamPosition, SeekOrigin.Begin);
-							_fileStreamPosition += file.Read(buffer, 0, expectedLength);
+    private void ReadRemainingLogsAsync()
+    {
+        _fileStreamPosition = 0;
+        while (true)
+        {
+            if (File.Exists(_logPath))
+            {
+                var fileTime = File.GetLastWriteTime(_logPath);
+                if (fileTime != _currentFileTime // the log file has been reset or saved (closed)
+                    && new FileInfo(_logPath).Length < _fileStreamPosition) // this guarantees it is a reset
+                {
+                    _fileStreamPosition = 0;
+                    LogReset?.Invoke(this, EventArgs.Empty);
+                    _currentFileTime = fileTime;
+                }
 
-							foreach (var c in buffer)
-							{
-								if (c == '\n')
-								{
-									this.FlushMessage();
-									continue;
-								}
+                using (var file = new FileStream(_logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    var expectedLength = (int)(file.Length - _fileStreamPosition);
 
-								_messageBuffer.Add(c);
-							}
-						}
-					}
+                    if (expectedLength > 0)
+                    {
+                        var buffer = new byte[expectedLength];
 
-					if (this.IsRestoringHistory)
-					{
-						this.IsRestoringHistory = false;
-						this.HistoryRestorationEnded?.Invoke(this, EventArgs.Empty);
-					}
-				}
-				else
-				{
-					_fileStreamPosition = 0;
-				}
+                        file.Seek(_fileStreamPosition, SeekOrigin.Begin);
+                        _fileStreamPosition += file.Read(buffer, 0, expectedLength);
 
-				Thread.Sleep(500);
-			}
-		}
+                        foreach (var c in buffer)
+                        {
+                            if (c == '\n')
+                            {
+                                FlushMessage();
+                                continue;
+                            }
 
-		private void FlushMessage()
-		{
-			if (_messageBuffer.Count > 0)
-			{
-				var message = Encoding.Default.GetString(_messageBuffer.ToArray(), 0, _messageBuffer.Count);
-				this.LogReceived?.Invoke(this, message);
-				_messageBuffer.Clear();
-			}
-		}
-	}
+                            _messageBuffer.Add(c);
+                        }
+                    }
+                }
+
+                if (IsRestoringHistory)
+                {
+                    IsRestoringHistory = false;
+                    HistoryRestorationEnded?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            else
+            {
+                _fileStreamPosition = 0;
+            }
+
+            Thread.Sleep(500);
+        }
+    }
+
+    private void FlushMessage()
+    {
+        if (_messageBuffer.Count > 0)
+        {
+            var message = Encoding.Default.GetString(_messageBuffer.ToArray(), 0, _messageBuffer.Count);
+            LogReceived?.Invoke(this, message);
+            _messageBuffer.Clear();
+        }
+    }
 }

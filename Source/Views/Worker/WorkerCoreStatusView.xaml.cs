@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace FastBuild.Dashboard.Views.Worker
+namespace FastBuild.Dashboard.Views.Worker;
+
+/// <summary>
+///     Interaction logic for WorkerCoreStatusView.xaml
+/// </summary>
+public partial class WorkerCoreStatusView : UserControl
 {
-	/// <summary>
-	/// Interaction logic for WorkerCoreStatusView.xaml
-	/// </summary>
-	public partial class WorkerCoreStatusView : UserControl
-	{
-		public WorkerCoreStatusView()
-		{
-			InitializeComponent();
-		}
-	}
+    public WorkerCoreStatusView()
+    {
+        InitializeComponent();
+    }
 }

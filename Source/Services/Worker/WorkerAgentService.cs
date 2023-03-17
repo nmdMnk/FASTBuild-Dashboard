@@ -2,90 +2,85 @@
 using FastBuild.Dashboard.Configuration;
 using FastBuild.Dashboard.Services.RemoteWorker;
 
-namespace FastBuild.Dashboard.Services.Worker
+namespace FastBuild.Dashboard.Services.Worker;
+
+internal class WorkerAgentService : IWorkerAgentService
 {
-	internal class WorkerAgentService : IWorkerAgentService
-	{
-		public int WorkerCores
-		{
-			get
-			{
-				var cores = AppSettings.Default.WorkerCores;
-				if (cores <= 0)
-				{
-					cores = Environment.ProcessorCount;
-				}
+    private readonly IWorkerAgent _workerAgent;
 
-				return cores;
-			}
-			set
-			{
-				AppSettings.Default.WorkerCores = value;
-				AppSettings.Default.Save();
+    public WorkerAgentService()
+    {
+        _workerAgent = new ExternalWorkerAgent();
+        _workerAgent.WorkerRunStateChanged += WorkerAgent_WorkerRunStateChanged;
+    }
 
-				if (_workerAgent.IsRunning)
-				{
-					_workerAgent.SetCoreCount(this.WorkerCores);
-				}
-			}
-		}
-
-		public int WorkerThreshold
+    public int WorkerCores
+    {
+        get
         {
-			get => AppSettings.Default.WorkerThreshold;
-			set
-            {
-                AppSettings.Default.WorkerThreshold = value;
-                AppSettings.Default.Save();
+            var cores = AppSettings.Default.WorkerCores;
+            if (cores <= 0) cores = Environment.ProcessorCount;
 
-                if (_workerAgent.IsRunning)
-                {
-                    _workerAgent.SetThresholdValue(this.WorkerThreshold);
-                }
-            }
+            return cores;
         }
+        set
+        {
+            AppSettings.Default.WorkerCores = value;
+            AppSettings.Default.Save();
 
-		public WorkerMode WorkerMode
-		{
-			get => (WorkerMode)AppSettings.Default.WorkerMode;
-			set
-			{
-				AppSettings.Default.WorkerMode = (int)value;
-				AppSettings.Default.Save();
+            if (_workerAgent.IsRunning) _workerAgent.SetCoreCount(WorkerCores);
+        }
+    }
 
-				if (_workerAgent.IsRunning)
-				{
-					_workerAgent.SetWorkerMode(this.WorkerMode);
-				}
-			}
-		}
+    public int WorkerThreshold
+    {
+        get => AppSettings.Default.WorkerThreshold;
+        set
+        {
+            AppSettings.Default.WorkerThreshold = value;
+            AppSettings.Default.Save();
 
-		public bool IsRunning => _workerAgent.IsRunning;
-		public event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;
+            if (_workerAgent.IsRunning) _workerAgent.SetThresholdValue(WorkerThreshold);
+        }
+    }
 
-		private readonly IWorkerAgent _workerAgent;
+    public WorkerMode WorkerMode
+    {
+        get => (WorkerMode)AppSettings.Default.WorkerMode;
+        set
+        {
+            AppSettings.Default.WorkerMode = (int)value;
+            AppSettings.Default.Save();
 
-		public WorkerAgentService()
-		{
-			_workerAgent = new ExternalWorkerAgent();
-			_workerAgent.WorkerRunStateChanged += this.WorkerAgent_WorkerRunStateChanged;
-		}
+            if (_workerAgent.IsRunning) _workerAgent.SetWorkerMode(WorkerMode);
+        }
+    }
 
-		private void WorkerAgent_WorkerRunStateChanged(object sender, WorkerRunStateChangedEventArgs e)
-			=> this.WorkerRunStateChanged?.Invoke(this, e);
+    public bool IsRunning => _workerAgent.IsRunning;
+    public event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;
 
-		public void Initialize()
-		{
-			_workerAgent.Initialize();
-			if (_workerAgent.IsRunning)
-			{
-				_workerAgent.SetCoreCount(this.WorkerCores);
-				_workerAgent.SetWorkerMode(this.WorkerMode);
-			}
-		}
+    public void Initialize()
+    {
+        _workerAgent.Initialize();
+        if (_workerAgent.IsRunning)
+        {
+            _workerAgent.SetCoreCount(WorkerCores);
+            _workerAgent.SetWorkerMode(WorkerMode);
+        }
+    }
 
-		public WorkerCoreStatus[] GetStatus() => _workerAgent.GetStatus();
+    public WorkerCoreStatus[] GetStatus()
+    {
+        return _workerAgent.GetStatus();
+    }
 
-		public void SetLocalWorker(IRemoteWorkerAgent worker) => _workerAgent.SetLocalWorker(worker);
-	}
+    public void SetLocalWorker(IRemoteWorkerAgent worker)
+    {
+        _workerAgent.SetLocalWorker(worker);
+    }
+
+    private void WorkerAgent_WorkerRunStateChanged(object sender, WorkerRunStateChangedEventArgs e)
+    {
+        WorkerRunStateChanged?.Invoke(this, e);
+    }
 }

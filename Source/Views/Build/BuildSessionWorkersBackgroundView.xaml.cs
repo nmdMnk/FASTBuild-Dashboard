@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace FastBuild.Dashboard.Views.Build
+namespace FastBuild.Dashboard.Views.Build;
+
+/// <summary>
+///     Interaction logic for BuildWorkerBackgroundView.xaml
+/// </summary>
+public partial class BuildSessionWorkersBackgroundView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for BuildWorkerBackgroundView.xaml
-    /// </summary>
-    public partial class BuildSessionWorkersBackgroundView : UserControl
+    public BuildSessionWorkersBackgroundView()
     {
-        public BuildSessionWorkersBackgroundView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace FastBuild.Dashboard.Views.Worker
+namespace FastBuild.Dashboard.Views.Worker;
+
+/// <summary>
+///     Interaction logic for WorkerView.xaml
+/// </summary>
+public partial class WorkerView : UserControl
 {
-	/// <summary>
-	/// Interaction logic for WorkerView.xaml
-	/// </summary>
-	public partial class WorkerView : UserControl
-	{
-		public WorkerView()
-		{
-			InitializeComponent();
-		}
-	}
+    public WorkerView()
+    {
+        InitializeComponent();
+    }
 }

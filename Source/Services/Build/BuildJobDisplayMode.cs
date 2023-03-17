@@ -1,8 +1,7 @@
-﻿namespace FastBuild.Dashboard.Services.Build
+﻿namespace FastBuild.Dashboard.Services.Build;
+
+internal enum BuildJobDisplayMode
 {
-	internal enum BuildJobDisplayMode
-	{
-		Standard,
-		Compact
-	}
+    Standard,
+    Compact
 }

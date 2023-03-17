@@ -68,7 +68,7 @@
                                                         </Grid.ColumnDefinitions>
 
                                                         <materialDesign:PackIcon Kind="CloseOctagonOutline" />
-                                                        
+
                                                         <TextBlock Grid.Column="1"
                                                                    Margin="8,0,0,0">
                                                             #<Run Text="{Binding LineNumber, Mode=OneWay}" />
@@ -90,4 +90,3 @@
         </StackPanel>
     </materialDesign:Card>
 </UserControl>
-

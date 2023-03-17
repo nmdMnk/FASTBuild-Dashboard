@@ -1,34 +1,36 @@
 ﻿using System;
 using Caliburn.Micro;
 
-namespace FastBuild.Dashboard.Services.Build
+namespace FastBuild.Dashboard.Services.Build;
+
+internal class BuildViewportServiceXamlSupport : PropertyChangedBase
 {
-	internal class BuildViewportServiceXamlSupport : PropertyChangedBase
-	{
-		public static BuildViewportServiceXamlSupport Instance { get; }
+    static BuildViewportServiceXamlSupport()
+    {
+        Instance = new BuildViewportServiceXamlSupport();
+    }
 
-		static BuildViewportServiceXamlSupport() 
-			=> BuildViewportServiceXamlSupport.Instance = new BuildViewportServiceXamlSupport();
+    public BuildViewportServiceXamlSupport()
+    {
+        var viewportService = IoC.Get<IBuildViewportService>();
+        viewportService.BuildJobDisplayModeChanged += ViewportService_BuildJobDisplayModeChanged;
+    }
+
+    public static BuildViewportServiceXamlSupport Instance { get; }
 
 
-		public BuildJobDisplayMode JobDisplayMode => IoC.Get<IBuildViewportService>().BuildJobDisplayMode;
+    public BuildJobDisplayMode JobDisplayMode => IoC.Get<IBuildViewportService>().BuildJobDisplayMode;
 
-		public bool IsCompactDisplayMode
-		{
-			get => this.JobDisplayMode == BuildJobDisplayMode.Compact;
-			set => IoC.Get<IBuildViewportService>().SetBuildJobDisplayMode(value ? BuildJobDisplayMode.Compact : BuildJobDisplayMode.Standard);
-		}
+    public bool IsCompactDisplayMode
+    {
+        get => JobDisplayMode == BuildJobDisplayMode.Compact;
+        set => IoC.Get<IBuildViewportService>()
+            .SetBuildJobDisplayMode(value ? BuildJobDisplayMode.Compact : BuildJobDisplayMode.Standard);
+    }
 
-		public BuildViewportServiceXamlSupport()
-		{
-			var viewportService = IoC.Get<IBuildViewportService>();
-			viewportService.BuildJobDisplayModeChanged += this.ViewportService_BuildJobDisplayModeChanged;
-		}
-
-		private void ViewportService_BuildJobDisplayModeChanged(object sender, EventArgs e)
-		{
-			this.NotifyOfPropertyChange(nameof(this.JobDisplayMode));
-			this.NotifyOfPropertyChange(nameof(this.IsCompactDisplayMode));
-		}
-	}
+    private void ViewportService_BuildJobDisplayModeChanged(object sender, EventArgs e)
+    {
+        this.NotifyOfPropertyChange(nameof(JobDisplayMode));
+        this.NotifyOfPropertyChange(nameof(IsCompactDisplayMode));
+    }
 }

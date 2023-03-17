@@ -1,17 +1,16 @@
-﻿using FastBuild.Dashboard.Services.RemoteWorker;
-using System;
+﻿using System;
+using FastBuild.Dashboard.Services.RemoteWorker;
 
-namespace FastBuild.Dashboard.Services.Worker
+namespace FastBuild.Dashboard.Services.Worker;
+
+internal interface IWorkerAgent
 {
-    internal interface IWorkerAgent
-    {
-        event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;
-		bool IsRunning { get; }
-		void SetCoreCount(int coreCount);
-        void SetThresholdValue(int threshold);
-        void SetWorkerMode(WorkerMode mode);
-        void SetLocalWorker(IRemoteWorkerAgent worker);
-		void Initialize();
-		WorkerCoreStatus[] GetStatus();
-	}
+    bool IsRunning { get; }
+    event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;
+    void SetCoreCount(int coreCount);
+    void SetThresholdValue(int threshold);
+    void SetWorkerMode(WorkerMode mode);
+    void SetLocalWorker(IRemoteWorkerAgent worker);
+    void Initialize();
+    WorkerCoreStatus[] GetStatus();
 }

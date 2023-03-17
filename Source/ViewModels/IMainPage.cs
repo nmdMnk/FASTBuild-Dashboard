@@ -1,8 +1,7 @@
-﻿namespace FastBuild.Dashboard.ViewModels
+﻿namespace FastBuild.Dashboard.ViewModels;
+
+internal interface IMainPage
 {
-    internal interface IMainPage 
-    {
-		string Icon { get; }
-		string DisplayName { get; }
-    }
+    string Icon { get; }
+    string DisplayName { get; }
 }

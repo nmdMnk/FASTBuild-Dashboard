@@ -2,12 +2,17 @@
 using System.Windows;
 using System.Windows.Documents;
 
-namespace FastBuild.Dashboard.Views.About
-{
-	public partial class AboutView 
-	{
-		public AboutView() => InitializeComponent();
+namespace FastBuild.Dashboard.Views.About;
 
-		private void Hyperlink_Click(object sender, RoutedEventArgs e) => Process.Start(((Hyperlink)sender).NavigateUri.ToString());
-	}
+public partial class AboutView
+{
+    public AboutView()
+    {
+        InitializeComponent();
+    }
+
+    private void Hyperlink_Click(object sender, RoutedEventArgs e)
+    {
+        Process.Start(((Hyperlink)sender).NavigateUri.ToString());
+    }
 }

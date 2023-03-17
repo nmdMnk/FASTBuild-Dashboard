@@ -11,10 +11,14 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="TextBlock"
@@ -110,7 +114,7 @@
                                 <materialDesign:PackIcon Kind="FolderOutline" />
                             </Button>
 
-                            <TextBox x:Name="BrokeragePath" 
+                            <TextBox x:Name="BrokeragePath"
                                      VerticalAlignment="Center" />
                         </DockPanel>
                     </StackPanel>
@@ -118,7 +122,7 @@
                     <StackPanel Style="{StaticResource OptionContainer}">
                         <TextBlock Style="{StaticResource OptionTitle}"
                                    Text="" />   <!-- placeholder -->
-                            <DockPanel Style="{StaticResource OptionContent}">
+                        <DockPanel Style="{StaticResource OptionContent}">
 
                             <Grid IsHitTestVisible="True"
                                   Background="Transparent"
@@ -126,7 +130,7 @@
                                   Style="{StaticResource OptionRightIcon}"
                                   ToolTip="Might not take effect until you restart your computer">
                                 <materialDesign:PackIcon Kind="InformationOutline"
-                                                         HorizontalAlignment="Center"/>
+                                                         HorizontalAlignment="Center" />
                             </Grid>
 
                             <materialDesign:PackIcon Kind="ServerNetwork"
@@ -139,7 +143,7 @@
                     </StackPanel>
 
                     <Border Style="{StaticResource Separator}" />
-                    
+
                     <TextBlock Style="{StaticResource SectionTitle}"
                                Text="Cache" />
 
@@ -154,7 +158,7 @@
                                 <materialDesign:PackIcon Kind="FolderOutline" />
                             </Button>
 
-                            <TextBox x:Name="CachePath" 
+                            <TextBox x:Name="CachePath"
                                      VerticalAlignment="Center" />
                         </DockPanel>
                     </StackPanel>
@@ -176,7 +180,7 @@
                                   Style="{StaticResource OptionRightIcon}"
                                   ToolTip="Disabled: Worker will accept no tasks&#x0a;Idle: Worker will accept tasks when PC is considered idle&#x0a;Always: Worker will accept tasks regardless of PC state&#x0a;Proportional: Worker will accept tasks proportional to PC's idle CPU power">
                                 <materialDesign:PackIcon Kind="InformationOutline"
-                                                         HorizontalAlignment="Center"/>
+                                                         HorizontalAlignment="Center" />
                             </Grid>
 
                             <ComboBox SelectedIndex="{Binding WorkerMode, Mode=TwoWay}">
@@ -205,7 +209,7 @@
                                     TickPlacement="BottomRight"
                                     TickFrequency="1"
                                     IsSnapToTickEnabled="True"
-                                    IsEnabled="{Binding WorkerThresholdEnabled}"/>
+                                    IsEnabled="{Binding WorkerThresholdEnabled}" />
                         </DockPanel>
 
                     </StackPanel>
@@ -226,7 +230,7 @@
                                     TickPlacement="BottomRight"
                                     TickFrequency="1"
                                     IsSnapToTickEnabled="True"
-                                    Ticks="{Binding CoreTicks}"/>
+                                    Ticks="{Binding CoreTicks}" />
                         </DockPanel>
 
                     </StackPanel>
@@ -257,7 +261,7 @@
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate DataType="{x:Type sourceEditor:ExternalSourceEditorMetadata}">
                                         <TextBlock Text="{Binding Name}"
-                                                   ToolTip="{Binding Description}"/>
+                                                   ToolTip="{Binding Description}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -270,7 +274,7 @@
                                    Text="Path" />
 
                         <DockPanel Style="{StaticResource OptionContent}">
-                            <Button x:Name="BrowseExternalSourceEditor" 
+                            <Button x:Name="BrowseExternalSourceEditor"
                                     DockPanel.Dock="Right"
                                     Style="{StaticResource OptionRightButton}">
                                 <materialDesign:PackIcon Kind="FolderOutline" />
@@ -290,7 +294,7 @@
                                       Background="Transparent"
                                       DockPanel.Dock="Right"
                                       Style="{StaticResource OptionRightIcon}"
-                                      ToolTip="Use {filename} for source file name, {linenumber} for line number" >
+                                      ToolTip="Use {filename} for source file name, {linenumber} for line number">
                                     <materialDesign:PackIcon Kind="InformationOutline"
                                                              HorizontalAlignment="Center" />
                                 </Grid>

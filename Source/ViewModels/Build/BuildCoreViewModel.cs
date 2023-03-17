@@ -4,135 +4,121 @@ using Caliburn.Micro;
 using FastBuild.Dashboard.Communication.Events;
 using FastBuild.Dashboard.Services.Build;
 
-namespace FastBuild.Dashboard.ViewModels.Build
+namespace FastBuild.Dashboard.ViewModels.Build;
+#if DEBUG
+[DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
+#endif
+internal class BuildCoreViewModel : PropertyChangedBase
 {
+    private BuildJobViewModel _currentJob;
+
+    private bool _isBusy;
+    private double _uiJobsTotalWidth;
+
+    public BuildCoreViewModel(int id, BuildWorkerViewModel ownerWorker)
+    {
+        Id = id;
+        OwnerWorker = ownerWorker;
+        IoC.Get<IBuildViewportService>().ScalingChanged
+            += ViewTransformServicePreScalingChanged;
+    }
 #if DEBUG
-	[DebuggerDisplay("{" + nameof(BuildCoreViewModel.DebuggerDisplay) + "}")]
+    private string DebuggerDisplay => $"Core:{OwnerWorker.HostName} #{Id}";
 #endif
-	internal class BuildCoreViewModel : PropertyChangedBase
-	{
-#if DEBUG
-		private string DebuggerDisplay => $"Core:{this.OwnerWorker.HostName} #{this.Id}";
-#endif
+    public int Id { get; }
+    public BuildWorkerViewModel OwnerWorker { get; }
 
-		private bool _isBusy;
-		private BuildJobViewModel _currentJob;
-		private double _uiJobsTotalWidth;
-		public int Id { get; }
-		public BuildWorkerViewModel OwnerWorker { get; }
+    public BindableCollection<BuildJobViewModel> Jobs { get; } = new BindableCollection<BuildJobViewModel>();
 
-		public BindableCollection<BuildJobViewModel> Jobs { get; } = new BindableCollection<BuildJobViewModel>();
+    public BuildJobViewModel CurrentJob
+    {
+        get => _currentJob;
+        private set
+        {
+            if (Equals(value, _currentJob)) return;
 
-		public BuildJobViewModel CurrentJob
-		{
-			get => _currentJob;
-			private set
-			{
-				if (object.Equals(value, _currentJob))
-				{
-					return;
-				}
+            _currentJob = value;
+            this.NotifyOfPropertyChange();
+        }
+    }
 
-				_currentJob = value;
-				this.NotifyOfPropertyChange();
-			}
-		}
+    public bool IsBusy
+    {
+        get => _isBusy;
+        private set
+        {
+            if (value == _isBusy) return;
 
-		public bool IsBusy
-		{
-			get => _isBusy;
-			private set
-			{
-				if (value == _isBusy)
-				{
-					return;
-				}
+            _isBusy = value;
+            this.NotifyOfPropertyChange();
+        }
+    }
 
-				_isBusy = value;
-				this.NotifyOfPropertyChange();
-			}
-		}
+    public double UIJobsTotalWidth
+    {
+        get => _uiJobsTotalWidth;
+        private set
+        {
+            if (value.Equals(_uiJobsTotalWidth)) return;
 
-		public double UIJobsTotalWidth
-		{
-			get => _uiJobsTotalWidth;
-			private set
-			{
-				if (value.Equals(_uiJobsTotalWidth))
-				{
-					return;
-				}
+            _uiJobsTotalWidth = value;
+            this.NotifyOfPropertyChange();
+        }
+    }
 
-				_uiJobsTotalWidth = value;
-				this.NotifyOfPropertyChange();
-			}
-		}
+    private void ViewTransformServicePreScalingChanged(object sender, EventArgs e)
+    {
+        UpdateUIJobsTotalWidth();
+    }
 
-		public BuildCoreViewModel(int id, BuildWorkerViewModel ownerWorker)
-		{
-			this.Id = id;
-			this.OwnerWorker = ownerWorker;
-			IoC.Get<IBuildViewportService>().ScalingChanged
-				+= this.ViewTransformServicePreScalingChanged;
-		}
+    public BuildJobViewModel OnJobFinished(FinishJobEventArgs e)
+    {
+        IsBusy = false;
+        if (CurrentJob != null)
+        {
+            var job = CurrentJob;
+            CurrentJob.OnFinished(e);
+            CurrentJob = null;
+            return job;
+        }
 
-		private void ViewTransformServicePreScalingChanged(object sender, EventArgs e) => this.UpdateUIJobsTotalWidth();
+        return null;
+    }
 
-		public BuildJobViewModel OnJobFinished(FinishJobEventArgs e)
-		{
-			this.IsBusy = false;
-			if (this.CurrentJob != null)
-			{
-				var job = this.CurrentJob;
-				this.CurrentJob.OnFinished(e);
-				this.CurrentJob = null;
-				return job;
-			}
+    public BuildJobViewModel OnJobStarted(StartJobEventArgs e, DateTime sessionStartTime)
+    {
+        IsBusy = true;
 
-			return null;
-		}
+        CurrentJob = new BuildJobViewModel(this, e, Jobs.Count == 0 ? null : Jobs[Jobs.Count - 1]);
 
-		public BuildJobViewModel OnJobStarted(StartJobEventArgs e, DateTime sessionStartTime)
-		{
-			this.IsBusy = true;
+        // called from log watcher thread
+        lock (Jobs)
+        {
+            Jobs.Add(CurrentJob);
+        }
 
-			this.CurrentJob = new BuildJobViewModel(this, e, this.Jobs.Count == 0 ? null : this.Jobs[this.Jobs.Count - 1]);
+        return CurrentJob;
+    }
 
-			// called from log watcher thread
-			lock (this.Jobs)
-			{
-				this.Jobs.Add(this.CurrentJob);
-			}
+    public void OnSessionStopped(double currentTimeOffset)
+    {
+        foreach (var job in Jobs) job.OnSessionStopped(currentTimeOffset);
+    }
 
-			return this.CurrentJob;
-		}
+    public void Tick(double currentTimeOffset)
+    {
+        // called from tick thread
+        lock (Jobs)
+        {
+            foreach (var job in Jobs) job.Tick(currentTimeOffset);
+        }
 
-		public void OnSessionStopped(double currentTimeOffset)
-		{
-			foreach (var job in this.Jobs)
-			{
-				job.OnSessionStopped(currentTimeOffset);
-			}
-		}
+        UpdateUIJobsTotalWidth();
+    }
 
-		public void Tick(double currentTimeOffset)
-		{
-			// called from tick thread
-			lock (this.Jobs)
-			{
-				foreach (var job in this.Jobs)
-				{
-					job.Tick(currentTimeOffset);
-				}
-			}
-
-			this.UpdateUIJobsTotalWidth();
-		}
-
-		private void UpdateUIJobsTotalWidth()
-		{
-			this.UIJobsTotalWidth = IoC.Get<IBuildViewportService>().Scaling *
-									this.OwnerWorker.OwnerSession.ElapsedTime.TotalSeconds;
-		}
-	}
+    private void UpdateUIJobsTotalWidth()
+    {
+        UIJobsTotalWidth = IoC.Get<IBuildViewportService>().Scaling *
+                           OwnerWorker.OwnerSession.ElapsedTime.TotalSeconds;
+    }
 }

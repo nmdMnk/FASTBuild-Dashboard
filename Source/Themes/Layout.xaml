@@ -4,7 +4,7 @@
 
     <system:Double x:Key="TitleColorZoneHeight">64</system:Double>
     <Thickness x:Key="MainPageTitleMargin">48,0,0,0</Thickness>
-    
+
     <system:Double x:Key="WorkerHeaderWidth">120</system:Double>
     <GridLength x:Key="WorkerHeaderColumnSize">120</GridLength>
 

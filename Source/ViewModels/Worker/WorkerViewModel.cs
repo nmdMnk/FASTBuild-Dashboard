@@ -3,126 +3,96 @@ using System.Timers;
 using Caliburn.Micro;
 using FastBuild.Dashboard.Services.Worker;
 
-namespace FastBuild.Dashboard.ViewModels.Worker
+namespace FastBuild.Dashboard.ViewModels.Worker;
+
+internal class WorkerViewModel : PropertyChangedBase, IMainPage
 {
-	internal class WorkerViewModel : PropertyChangedBase, IMainPage
-	{
-		private readonly IWorkerAgentService _workerAgentService;
-		private string _workerErrorMessage;
-		private string _statusTitle;
-		public string DisplayName => "Local Worker";
+    private readonly IWorkerAgentService _workerAgentService;
 
-		public bool IsWorkerRunning => _workerAgentService.IsRunning;
+    private bool _isTicking;
+    private string _statusTitle;
+    private string _workerErrorMessage;
 
-		public string Icon => "Worker";
+    public WorkerViewModel()
+    {
+        StatusTitle = "Preparing...";
 
-		public string WorkerErrorMessage
-		{
-			get => _workerErrorMessage;
-			private set
-			{
-				if (value == _workerErrorMessage)
-				{
-					return;
-				}
+        _workerAgentService = IoC.Get<IWorkerAgentService>();
+        _workerAgentService.WorkerRunStateChanged += WorkerAgentService_WorkerRunStateChanged;
+        _workerAgentService.Initialize();
 
-				_workerErrorMessage = value;
-				this.NotifyOfPropertyChange();
-			}
-		}
+        var tickTimer = new Timer(500)
+        {
+            AutoReset = true
+        };
+        tickTimer.Elapsed += Tick;
+        tickTimer.Start();
+    }
 
-		public string StatusTitle
-		{
-			get => _statusTitle;
-			private set
-			{
-				if (value == _statusTitle)
-				{
-					return;
-				}
+    public bool IsWorkerRunning => _workerAgentService.IsRunning;
 
-				_statusTitle = value;
-				this.NotifyOfPropertyChange();
-			}
-		}
+    public string WorkerErrorMessage
+    {
+        get => _workerErrorMessage;
+        private set
+        {
+            if (value == _workerErrorMessage) return;
 
-		public BindableCollection<WorkerCoreStatusViewModel> CoreStatuses { get; }
-			= new BindableCollection<WorkerCoreStatusViewModel>();
+            _workerErrorMessage = value;
+            this.NotifyOfPropertyChange();
+        }
+    }
 
-		private bool _isTicking;
+    public string StatusTitle
+    {
+        get => _statusTitle;
+        private set
+        {
+            if (value == _statusTitle) return;
 
-		public WorkerViewModel()
-		{
-			this.StatusTitle = "Preparing...";
+            _statusTitle = value;
+            this.NotifyOfPropertyChange();
+        }
+    }
 
-			_workerAgentService = IoC.Get<IWorkerAgentService>();
-			_workerAgentService.WorkerRunStateChanged += this.WorkerAgentService_WorkerRunStateChanged;
-			_workerAgentService.Initialize();
+    public BindableCollection<WorkerCoreStatusViewModel> CoreStatuses { get; }
+        = new BindableCollection<WorkerCoreStatusViewModel>();
 
-			var tickTimer = new Timer(500)
-			{
-				AutoReset = true
-			};
-			tickTimer.Elapsed += this.Tick;
-			tickTimer.Start();
-		}
+    public string DisplayName => "Local Worker";
 
-		private void Tick(object sender, ElapsedEventArgs e)
-		{
-			if (!this.IsWorkerRunning)
-			{
-				return;
-			}
+    public string Icon => "Worker";
 
-			if (_isTicking)
-			{
-				return; 
-			}
+    private void Tick(object sender, ElapsedEventArgs e)
+    {
+        if (!IsWorkerRunning) return;
 
-			_isTicking = true;
+        if (_isTicking) return;
 
-			var statuses = _workerAgentService.GetStatus();
+        _isTicking = true;
 
-			for (var i = this.CoreStatuses.Count - 1; i > statuses.Length; --i)
-			{
-				this.CoreStatuses.RemoveAt(i);
-			}
+        var statuses = _workerAgentService.GetStatus();
 
-			for (var i = this.CoreStatuses.Count; i < statuses.Length; ++i)
-			{
-				this.CoreStatuses.Add(new WorkerCoreStatusViewModel(i));
-			}
+        for (var i = CoreStatuses.Count - 1; i > statuses.Length; --i) CoreStatuses.RemoveAt(i);
 
-			for (var i = 0; i < this.CoreStatuses.Count; ++i)
-			{
-				this.CoreStatuses[i].UpdateStatus(statuses[i]);
-			}
+        for (var i = CoreStatuses.Count; i < statuses.Length; ++i) CoreStatuses.Add(new WorkerCoreStatusViewModel(i));
 
-			if (statuses.All(s => s.State == WorkerCoreState.Disabled))
-			{
-				this.StatusTitle = "Disabled";
-			}
-			else if (statuses.Any(s => s.State == WorkerCoreState.Working))
-			{
-				this.StatusTitle = "Working";
-			}
-			else
-			{
-				this.StatusTitle = "Idle";
-			}
+        for (var i = 0; i < CoreStatuses.Count; ++i) CoreStatuses[i].UpdateStatus(statuses[i]);
 
-			_isTicking = false;
-		}
+        if (statuses.All(s => s.State == WorkerCoreState.Disabled))
+            StatusTitle = "Disabled";
+        else if (statuses.Any(s => s.State == WorkerCoreState.Working))
+            StatusTitle = "Working";
+        else
+            StatusTitle = "Idle";
 
-		private void WorkerAgentService_WorkerRunStateChanged(object sender, WorkerRunStateChangedEventArgs e)
-		{
-			this.NotifyOfPropertyChange(nameof(this.IsWorkerRunning));
-			this.WorkerErrorMessage = e.ErrorMessage;
+        _isTicking = false;
+    }
 
-			if (!e.IsRunning)
-			{
-				this.StatusTitle = "Worker Error";
-			}
-		}
-	}
+    private void WorkerAgentService_WorkerRunStateChanged(object sender, WorkerRunStateChangedEventArgs e)
+    {
+        this.NotifyOfPropertyChange(nameof(IsWorkerRunning));
+        WorkerErrorMessage = e.ErrorMessage;
+
+        if (!e.IsRunning) StatusTitle = "Worker Error";
+    }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Caliburn.Micro;
 using FastBuild.Dashboard.Services;
@@ -59,7 +60,7 @@ internal class AppBootstrapper : BootstrapperBase
 
 			if (App.Current.DoNotSpawnShadowExecutable || App.Current.IsShadowProcess)
 			{
-				this.DisplayRootViewFor<MainWindowViewModel>();
+				this.DisplayRootViewForAsync<MainWindowViewModel>();
 			}
 			else
 			{

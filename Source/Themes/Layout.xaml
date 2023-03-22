@@ -31,8 +31,8 @@
     <Thickness x:Key="BuildWorkerRowMarginCompact">0,1</Thickness>
 
     <Thickness x:Key="BuildWorkerRowPaddingStandard">8</Thickness>
-    <Thickness x:Key="BuildWorkerRowPaddingCompact">4</Thickness>
+    <Thickness x:Key="BuildWorkerRowPaddingCompact">2</Thickness>
 
     <system:Double x:Key="JobViewHeightStandard">24</system:Double>
-    <system:Double x:Key="JobViewHeightCompact">12</system:Double>
+    <system:Double x:Key="JobViewHeightCompact">6</system:Double>
 </ResourceDictionary>

@@ -19,8 +19,9 @@
         Title="FASTBuild" 
         Height="400" 
         Width="800"
+        Icon="/Resources/Icons/app.ico"
         ui:WindowHelper.UseModernWindowStyle="True"
-        Icon="/Resources/Icons/app.ico">
+        ui:ThemeManager.IsThemeAware="True">
 
     <Window.Resources>
         <ResourceDictionary>

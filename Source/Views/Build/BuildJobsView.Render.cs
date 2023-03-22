@@ -21,7 +21,7 @@ partial class BuildJobsView
             "JobMargin",
             typeof(Thickness),
             typeof(BuildJobsView),
-            new UIPropertyMetadata(new Thickness(2), AffectsVisual));
+            new UIPropertyMetadata(new Thickness(2, 0.25d, 2, 0.25d), AffectsVisual));
 
     public static readonly DependencyProperty JobTextMarginProperty =
         DependencyProperty.Register(

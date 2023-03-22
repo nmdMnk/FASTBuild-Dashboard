@@ -28,7 +28,8 @@ internal class WorkerAgentService : IWorkerAgentService
             AppSettings.Default.WorkerCores = value;
             AppSettings.Default.Save();
 
-            if (_workerAgent.IsRunning) _workerAgent.SetCoreCount(WorkerCores);
+            if (_workerAgent.IsRunning) 
+                _workerAgent.SetCoreCount(WorkerCores);
         }
     }
 
@@ -40,7 +41,8 @@ internal class WorkerAgentService : IWorkerAgentService
             AppSettings.Default.WorkerThreshold = value;
             AppSettings.Default.Save();
 
-            if (_workerAgent.IsRunning) _workerAgent.SetThresholdValue(WorkerThreshold);
+            if (_workerAgent.IsRunning) 
+                _workerAgent.SetThresholdValue(WorkerThreshold);
         }
     }
 
@@ -52,7 +54,23 @@ internal class WorkerAgentService : IWorkerAgentService
             AppSettings.Default.WorkerMode = (int)value;
             AppSettings.Default.Save();
 
-            if (_workerAgent.IsRunning) _workerAgent.SetWorkerMode(WorkerMode);
+            if (_workerAgent.IsRunning) 
+                _workerAgent.SetWorkerMode(WorkerMode);
+        }
+    }
+
+    public int MinFreeMemoryMiB
+    {
+        get => AppSettings.Default.WorkerMinFreeMemoryMiB;
+        set
+        {
+            AppSettings.Default.WorkerMinFreeMemoryMiB = value;
+            AppSettings.Default.Save();
+            
+            // Nothing we can do atm, worker needs restart to start with new param
+            // #todo Implement auto restart when worker is idle and new settings are available
+            // if (_workerAgent.IsRunning)
+            //     _workerAgent.Restart();
         }
     }
 

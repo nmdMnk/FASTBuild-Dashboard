@@ -123,15 +123,19 @@ partial class BuildJobsView
             var width = MathEx.Clamp((job.EndTimeOffset - acceptedStartTimeOffset) * scaling, 0, maxWidth);
 
             if (width < ShortJobWidthThreshold)
+            {
                 // try to use space before next job
                 width = job.NextJob != null
                     ? MathEx.Clamp((job.NextJob.StartTimeOffset - acceptedStartTimeOffset) * scaling, 0,
                         ShortJobWidthThreshold)
                     : ShortJobWidthThreshold;
+            }
 
             if (width < 1 // job too short to display
                 || left + width < 1) // left could be negative
+            {
                 continue;
+            }
 
             var top = _coreTopMap[job.OwnerCore];
 
@@ -170,11 +174,13 @@ partial class BuildJobsView
 
         dc.DrawRoundedRectangle(job.UIBackground, job.UIBorderPen, paddedRect, cornerRadius, cornerRadius);
 
-        if (!(rect.Width > TextlessJobWidthThreshold) || !showText) return;
+        if (!(rect.Width > TextlessJobWidthThreshold) || !showText) 
+            return;
 
         var opactiy = (rect.Width - TextlessJobWidthThreshold) / TextlessJobWidthThreshold;
 
-        if (opactiy <= 0) return;
+        if (opactiy <= 0) 
+            return;
 
         Brush brush;
         if (opactiy >= 1)

@@ -103,6 +103,18 @@ internal sealed partial class SettingsViewModel : ValidatingScreen<SettingsViewM
 
     public string DisplayCores => WorkerCores == 1 ? "1 core" : $"up to {WorkerCores} cores";
 
+    public int WorkerMinFreeMemoryMiB
+    {
+        get => IoC.Get<IWorkerAgentService>().MinFreeMemoryMiB;
+        set
+        {
+            IoC.Get<IWorkerAgentService>().MinFreeMemoryMiB = Math.Max(0, value);
+            this.NotifyOfPropertyChange();
+            this.NotifyOfPropertyChange(nameof(DisplayMinFreeMemoryMiB));
+        }
+    }
+    public string DisplayMinFreeMemoryMiB => $"{WorkerMinFreeMemoryMiB} MiB";
+
     /*
     public bool StartWithWindows
     {

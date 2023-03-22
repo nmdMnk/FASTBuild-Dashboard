@@ -82,7 +82,8 @@ internal class AppBootstrapper : BootstrapperBase
         var shadowPath = Path.Combine(Path.GetTempPath(), "FBDashboard", shadowAssemblyName);
         try
         {
-            if (File.Exists(shadowPath)) File.Delete(shadowPath);
+            if (File.Exists(shadowPath)) 
+                File.Delete(shadowPath);
 
             Debug.Assert(assemblyLocation != null, "assemblyLocation != null");
             Directory.CreateDirectory(Path.GetDirectoryName(shadowPath));

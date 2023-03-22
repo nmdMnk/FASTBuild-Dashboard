@@ -232,7 +232,35 @@
                                     IsSnapToTickEnabled="True"
                                     Ticks="{Binding CoreTicks}" />
                         </DockPanel>
+                    </StackPanel>
+                    
+                    <StackPanel Style="{StaticResource OptionContainer}">
+                        <TextBlock Style="{StaticResource OptionTitle}"
+                                   Text="Minimum Free Memory" />
+                        
 
+                        <DockPanel Style="{StaticResource OptionContent}">
+                            <Grid IsHitTestVisible="True"
+                                  Background="Transparent"
+                                  DockPanel.Dock="Right"
+                                  Style="{StaticResource OptionRightIcon}"
+                                  ToolTip="[Windows Only] Override the default minimum memory limit (in MiB) from the default of 1024 (1 GiB).&#x0a;When a worked has less memory available than this amount it will not accept work.&#x0a;Restart the dashboard/ worker to apply changes!">
+                                <materialDesign:PackIcon Kind="InformationOutline"
+                                                         HorizontalAlignment="Center" />
+                            </Grid>
+                            <TextBlock x:Name="DisplayMinFreeMemory"
+                                       DockPanel.Dock="Right"
+                                       Margin="8,4,0,0"
+                                       Text="MiB" />
+                            
+                            <TextBox x:Name="WorkerMinFreeMemory"
+                                       Text="{Binding WorkerMinFreeMemoryMiB, Mode=TwoWay, Delay=500}"
+                                       TextWrapping="NoWrap"
+                                       AcceptsReturn="False"
+                                       PreviewTextInput="WorkerMinFreeMemory_OnPreviewTextInput"/>
+                        </DockPanel>
+                        
+                        
                     </StackPanel>
 
                     <Border Style="{StaticResource Separator}" />

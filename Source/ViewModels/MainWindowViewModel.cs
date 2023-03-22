@@ -15,14 +15,14 @@ internal sealed class MainWindowViewModel : Conductor<IMainPage>.Collection.AllA
 
     public MainWindowViewModel()
     {
-        this.Items.Add(BuildWatcherPage);
-        this.Items.Add(WorkerPage);
-        this.Items.Add(BrokerPage);
-        this.Items.Add(SettingsPage);
-        this.Items.Add(AboutPage);
+        Items.Add(BuildWatcherPage);
+        Items.Add(WorkerPage);
+        Items.Add(BrokerPage);
+        Items.Add(SettingsPage);
+        Items.Add(AboutPage);
 
         CurrentPage = BuildWatcherPage;
-        this.DisplayName = "FASTBuild Dashboard";
+        DisplayName = "FASTBuild Dashboard";
     }
 
     public BuildWatcherViewModel BuildWatcherPage { get; } = new();
@@ -39,7 +39,7 @@ internal sealed class MainWindowViewModel : Conductor<IMainPage>.Collection.AllA
             if (Equals(value, _currentPage)) return;
 
             _currentPage = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 

@@ -8,6 +8,7 @@ internal interface IWorkerAgentService
     int WorkerCores { get; set; }
     int WorkerThreshold { get; set; }
     WorkerMode WorkerMode { get; set; }
+    int MinFreeMemoryMiB { get; set; }
     bool IsRunning { get; }
     event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;
     void Initialize();

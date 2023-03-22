@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using FastBuild.Dashboard.Configuration;
 using FastBuild.Dashboard.Services.RemoteWorker;
 
 namespace FastBuild.Dashboard.Services.Worker;
@@ -289,6 +290,8 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
             Arguments = "-nosubprocess",
             CreateNoWindow = true
         };
+        
+        startInfo.Arguments += $" -minfreememory={AppSettings.Default.WorkerMinFreeMemoryMiB}";
 
         Process process;
 
@@ -311,7 +314,8 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
             }
 
             _workerWindowPtr = FindExistingWorkerWindow();
-            if (_workerWindowPtr != IntPtr.Zero) break;
+            if (_workerWindowPtr != IntPtr.Zero) 
+                break;
 
             Thread.Sleep(100);
         }

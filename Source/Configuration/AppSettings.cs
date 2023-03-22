@@ -13,6 +13,8 @@ public class AppSettings : SettingsBase
 
     public int WorkerMode { get; set; } = (int)Services.Worker.WorkerMode.WorkWhenIdle;
 
+    public int WorkerMinFreeMemoryMiB { get; set; } = 4096;
+
     //public bool StartWithWindows { get; set; } = true;
     public string ExternalSourceEditorPath { get; set; }
     public string ExternalSourceEditorArgs { get; set; }

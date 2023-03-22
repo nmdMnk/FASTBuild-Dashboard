@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using System.Windows.Media;
 using Caliburn.Micro;
 using FastBuild.Dashboard.Services.Worker;
 
@@ -47,7 +47,7 @@ internal class WorkerCoreStatusViewModel : PropertyChangedBase
                     return Brushes.Gray;
                 case WorkerCoreState.Idle:
                 case WorkerCoreState.Working:
-                    return Brushes.DarkGreen;
+                    return Brushes.ForestGreen;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -64,7 +64,7 @@ internal class WorkerCoreStatusViewModel : PropertyChangedBase
                 case WorkerCoreState.Idle:
                     return Brushes.Transparent;
                 case WorkerCoreState.Working:
-                    return Brushes.Green;
+                    return Brushes.ForestGreen;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -80,7 +80,7 @@ internal class WorkerCoreStatusViewModel : PropertyChangedBase
                 case WorkerCoreState.Disabled:
                     return Brushes.Gray;
                 case WorkerCoreState.Idle:
-                    return Brushes.Green;
+                    return Brushes.ForestGreen;
                 case WorkerCoreState.Working:
                     return Brushes.White;
                 default:

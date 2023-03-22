@@ -8,17 +8,13 @@
              d:DesignHeight="400" d:DesignWidth="600">
     <Grid>
         <DockPanel>
-
             <Border Height="{StaticResource TitleColorZoneHeight}"
                     Margin="{StaticResource MainPageTitleMargin}"
                     Padding="16"
                     DockPanel.Dock="Top">
 
-                <Grid TextElement.Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
-                      VerticalAlignment="Center">
-
-                    <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                               VerticalAlignment="Center"
+                <Grid VerticalAlignment="Center">
+                    <TextBlock VerticalAlignment="Center"
                                Text="{Binding StatusTitle, Mode=OneWay}" />
                 </Grid>
             </Border>

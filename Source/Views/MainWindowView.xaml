@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewModels="clr-namespace:FastBuild.Dashboard.ViewModels"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -12,11 +13,14 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Icon="/Resources/Icons/app.ico"
         mc:Ignorable="d"
         MinWidth="600"
         MinHeight="400"
-        Title="FASTBuild" Height="400" Width="800">
+        Title="FASTBuild" 
+        Height="400" 
+        Width="800"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        Icon="/Resources/Icons/app.ico">
 
     <Window.Resources>
         <ResourceDictionary>

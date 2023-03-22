@@ -50,9 +50,9 @@ internal class AppBootstrapper : BootstrapperBase
 #if DEBUG && !DEBUG_SINGLE_INSTANCE
         this.DisplayRootViewForAsync<MainWindowViewModel>();
 #else
-			var assemblyLocation = Assembly.GetEntryAssembly().Location;
+			var assemblyLocation = Assembly.GetEntryAssembly()?.Location;
 
-			var identifier = assemblyLocation.Replace('\\', '_');
+			var identifier = assemblyLocation?.Replace('\\', '_');
 			if (!SingleInstance<App>.InitializeAsFirstInstance(identifier))
 			{
 				Environment.Exit(0);

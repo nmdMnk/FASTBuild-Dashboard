@@ -89,7 +89,8 @@ public partial class App : ISingleInstanceApp
 
         StartMinimized = args.Contains(AppArguments.StartMinimized);
         DoNotSpawnShadowExecutable = args.Contains(AppArguments.NoShadow);
-        if (IsShadowProcess) LoadShadowContext();
+        if (IsShadowProcess) 
+            LoadShadowContext();
     }
 
     private void LoadShadowContext()

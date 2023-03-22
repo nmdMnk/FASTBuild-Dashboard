@@ -1,18 +1,24 @@
 ﻿<Application x:Class="FastBuild.Dashboard.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:dashboard="clr-namespace:FastBuild.Dashboard">
+             xmlns:dashboard="clr-namespace:FastBuild.Dashboard"
+             xmlns:ui="http://schemas.modernwpf.com/2019">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <dashboard:AppBootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>
+                
+                <ui:ThemeResources />
+                <ui:XamlControlsResources />
 
+                <!--<ResourceDictionary Source="themes/WindowStyle.xaml" />-->
                 <ResourceDictionary Source="themes/Layout.xaml" />
                 <ResourceDictionary Source="themes/BuildJob.xaml" />
+                <!--<ResourceDictionary Source="themes/Default.xaml" />-->
                 <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.dark.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary

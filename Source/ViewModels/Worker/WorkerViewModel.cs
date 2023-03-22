@@ -64,19 +64,24 @@ internal class WorkerViewModel : PropertyChangedBase, IMainPage
 
     private void Tick(object sender, ElapsedEventArgs e)
     {
-        if (!IsWorkerRunning) return;
+        if (!IsWorkerRunning) 
+            return;
 
-        if (_isTicking) return;
+        if (_isTicking) 
+            return;
 
         _isTicking = true;
 
         var statuses = _workerAgentService.GetStatus();
 
-        for (var i = CoreStatuses.Count - 1; i > statuses.Length; --i) CoreStatuses.RemoveAt(i);
+        for (var i = CoreStatuses.Count - 1; i > statuses.Length; --i) 
+            CoreStatuses.RemoveAt(i);
 
-        for (var i = CoreStatuses.Count; i < statuses.Length; ++i) CoreStatuses.Add(new WorkerCoreStatusViewModel(i));
+        for (var i = CoreStatuses.Count; i < statuses.Length; ++i) 
+            CoreStatuses.Add(new WorkerCoreStatusViewModel(i));
 
-        for (var i = 0; i < CoreStatuses.Count; ++i) CoreStatuses[i].UpdateStatus(statuses[i]);
+        for (var i = 0; i < CoreStatuses.Count; ++i) 
+            CoreStatuses[i].UpdateStatus(statuses[i]);
 
         if (statuses.All(s => s.State == WorkerCoreState.Disabled))
             StatusTitle = "Disabled";
@@ -93,6 +98,7 @@ internal class WorkerViewModel : PropertyChangedBase, IMainPage
         this.NotifyOfPropertyChange(nameof(IsWorkerRunning));
         WorkerErrorMessage = e.ErrorMessage;
 
-        if (!e.IsRunning) StatusTitle = "Worker Error";
+        if (!e.IsRunning) 
+            StatusTitle = "Worker Error";
     }
 }

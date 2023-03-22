@@ -111,7 +111,7 @@
                 </Grid>
             </Border>
 
-            <Border Background="#E0FFFFFF"
+            <Border Background="{DynamicResource MaterialDesignPaper}"
                     x:Name="IsRestoringHistory"
                     d:IsHidden="true">
                 <StackPanel VerticalAlignment="Center">

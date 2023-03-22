@@ -237,6 +237,7 @@
             <SubType>Designer</SubType>
             <Generator>MSBuild:Compile</Generator>
         </Page>
+        <Page Include="Themes\Default.xaml" />
         <Page Include="Themes\Layout.xaml">
             <SubType>Designer</SubType>
             <Generator>MSBuild:Compile</Generator>
@@ -383,6 +384,7 @@
         <PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.1" />
         <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+        <PackageReference Include="ModernWpfUI" Version="0.9.6" />
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Ookii.Dialogs" Version="5.0.1" />

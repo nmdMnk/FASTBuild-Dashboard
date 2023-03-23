@@ -15,7 +15,7 @@ __New Improvements__
 - Removed start with windows (done via installer)
 - Bugfixes
 
-![Screenshot of FBD 1.0.0](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/tree/master/Documentations/Screenshots/FASTBuild-Dashboard.1.0.0.png)
+![Screenshot of FBD 1.0.0](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/blob/master/Documentations/Screenshots/FASTBuild-Dashboard.1.0.0.png)
 
 ## Changelog 
 ### 1.0.0.106

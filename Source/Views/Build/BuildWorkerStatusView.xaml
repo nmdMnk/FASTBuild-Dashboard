@@ -9,9 +9,7 @@
              d:DesignHeight="240" d:DesignWidth="300">
 
     <Grid>
-
         <Grid.ToolTip>
-
             <StackPanel Margin="4">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="ServerNetwork"
@@ -76,21 +74,23 @@
                                      VerticalAlignment="Center" />
             <TextBlock VerticalAlignment="Center"
                        Style="{DynamicResource MaterialDesignBody2TextBlock}"
-                       Foreground="{DynamicResource SecondaryAccentBrush}"
+                       Foreground="{DynamicResource MaterialDesignBody}"
                        Margin="4,0,0,0"
                        Text="{Binding ActiveWorkerCount}" />
             <TextBlock VerticalAlignment="Center"
                        Style="{DynamicResource MaterialDesignBody2TextBlock}"
+                       Foreground="{DynamicResource MaterialDesignBody}"
                        Text="/" />
             <TextBlock VerticalAlignment="Center"
                        Style="{DynamicResource MaterialDesignBody2TextBlock}"
+                       Foreground="{DynamicResource MaterialDesignBody}"
                        Text="{Binding PoolWorkerCount}" />
             <materialDesign:PackIcon Kind="Chip"
                                      VerticalAlignment="Center"
                                      Margin="12,0,0,0" />
             <TextBlock VerticalAlignment="Center"
                        Style="{DynamicResource MaterialDesignBody2TextBlock}"
-                       Foreground="{DynamicResource SecondaryAccentBrush}"
+                       Foreground="{DynamicResource MaterialDesignBody}"
                        Margin="4,0,0,0"
                        Text="{Binding ActiveCoreCount}" />
         </StackPanel>

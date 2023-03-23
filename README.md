@@ -6,12 +6,29 @@ We are actively using the Dashboard and FASTBuild for Unreal based projects and 
 __New Features__
 - Support for Work Proportional in tray
 - Broker Agents View
+- Change UI to Dark Mode!
+- Exposed mininum free memory setting to UI (worker/dashboard restart required!)
 
 __New Improvements__
 - Close button sends dashboard to tray (force close only possible via right click)
 - Some UX improvements
 - Removed start with windows (done via installer)
 - Bugfixes
+
+![Screenshot of FBD 1.0.0](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/tree/master/Documentations/Screenshots/FASTBuild-Dashboard.1.0.0.png)
+
+## Changelog 
+### 1.0.0.106
+New
+- Added dark mode as default (no dynamic theme change possible)
+- Exposed minimum free memory setting to UI settings (worker/dashboard restart required!)
+
+Improvements
+- Updated solution to .NET4.8 + updated all nuget packages to recent versions
+
+Fixes
+- Fixed auto scrolling in build view
+- Fixed tray icon exit sometimes not exiting
 
 ---
 

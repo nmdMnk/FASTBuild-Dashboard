@@ -53,7 +53,7 @@ internal class TrayNotifier
 
     private void TrayNotifier_Exit(object sender, EventArgs e)
     {
-        _owner.CloseApplication();
+        Application.Current.Shutdown();
     }
 
     private void WorkingIconTimer_Tick(object sender, EventArgs e)

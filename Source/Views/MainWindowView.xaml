@@ -16,7 +16,7 @@
         mc:Ignorable="d"
         MinWidth="600"
         MinHeight="400"
-        Title="FASTBuild" 
+        Title="FASTBuild Dashboard" 
         Height="400" 
         Width="800"
         Icon="/Resources/Icons/app.ico"

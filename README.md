@@ -15,9 +15,13 @@ __New Improvements__
 - Removed start with windows (done via installer)
 - Bugfixes
 
-![Screenshot of FBD 1.0.0](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/blob/master/Documentations/Screenshots/FASTBuild-Dashboard.1.0.0.png?raw=true)
+![Screenshot of FBD 1.0.1](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/blob/master/Documentations/Screenshots/FASTBuild-Dashboard.1.0.1.png?raw=true)
 
 ## Changelog 
+### 1.0.1.107
+Fixes
+- Fixed active worker, pool and core counts not visible due to bad coloring
+
 ### 1.0.0.106
 New
 - Added dark mode as default (no dynamic theme change possible)

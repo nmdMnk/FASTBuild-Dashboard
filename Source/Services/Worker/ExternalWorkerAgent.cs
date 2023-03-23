@@ -214,7 +214,16 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         KillProcessAndChildren((int)_workerProcessId);
 
         if (_localWorker != null && File.Exists(_localWorker.FilePath))
-            File.Delete(_localWorker.FilePath);
+        {
+            try
+            {
+                File.Delete(_localWorker.FilePath);
+            }
+            catch (Exception)
+            {
+                // Ignore exceptions as the file might be deleted already by FBuild Worker
+            }
+        }
     }
 
     private void StartWorkerGuardian()
@@ -234,7 +243,8 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
             {
                 var processId = 1u;
                 WinAPI.GetWindowThreadProcessId(_workerWindowPtr, ref processId);
-                if (processId != _workerProcessId) IsRunning = false;
+                if (processId != _workerProcessId) 
+                    IsRunning = false;
             }
 
             if (!IsRunning)
@@ -290,11 +300,9 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
             Arguments = "-nosubprocess",
             CreateNoWindow = true
         };
-        
         startInfo.Arguments += $" -minfreememory={AppSettings.Default.WorkerMinFreeMemoryMiB}";
 
         Process process;
-
         try
         {
             process = Process.Start(startInfo);

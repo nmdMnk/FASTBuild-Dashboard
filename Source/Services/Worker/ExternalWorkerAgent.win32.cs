@@ -118,7 +118,7 @@ internal partial class ExternalWorkerAgent
         public static extern uint RealGetWindowClass(IntPtr hWnd, [Out] StringBuilder lpWindowClass, int nMaxCount);
 
         [DllImport("shell32.dll")]
-        public static extern bool Shell_NotifyIcon(NotifyIconMessages Message, NOTIFYICONDATA data);
+        public static extern bool Shell_NotifyIconA(NotifyIconMessages Message, NOTIFYICONDATAA data);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, ref uint lpdwProcessId);
@@ -171,30 +171,36 @@ internal partial class ExternalWorkerAgent
             public IntPtr lParam;
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        public class NOTIFYICONDATA
+        public class NOTIFYICONDATAA
         {
-            public int cbSize = Marshal.SizeOf(typeof(NOTIFYICONDATA));
-            public int dwInfoFlags;
-            public int dwState;
-            public int dwStateMask;
-            public IntPtr hIcon;
+            public uint cbSize = (uint)Marshal.SizeOf(typeof(NOTIFYICONDATAA));
             public IntPtr hWnd;
-
+            public uint uID;
+            public uint uFlags;
+            public uint uCallbackMessage;
+            public IntPtr hIcon;
+            
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x80)]
+            public string szTip;
+            
+            public uint dwState;
+            public uint dwStateMask;
+            
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x100)]
             public string szInfo;
+            
+            public uint uTimeoutOrVersion;
 
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x40)]
             public string szInfoTitle;
+            
+            public uint dwInfoFlags;
 
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x80)]
-            public string szTip;
+            public Guid guidItem;
 
-            public int uCallbackMessage;
-            public int uFlags;
-            public int uID;
-            public int uTimeoutOrVersion;
+            public IntPtr hBalloonIcon;
         }
     }
 

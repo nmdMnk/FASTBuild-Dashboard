@@ -12,9 +12,11 @@ internal partial class ExternalWorkerAgent
         var existingWindowPtr = IntPtr.Zero;
         WinAPI.EnumWindows((hWnd, lParam) =>
         {
-            if (!WinAPIUtils.GetWindowText(hWnd).StartsWith("FBuildWorker")) return true;
+            if (!WinAPIUtils.GetWindowText(hWnd).StartsWith("FBuildWorker")) 
+                return true;
 
-            if (!WinAPIUtils.GetWindowClass(hWnd).StartsWith("windowClass_")) return true;
+            if (!WinAPIUtils.GetWindowClass(hWnd).StartsWith("windowClass_")) 
+                return true;
 
             existingWindowPtr = hWnd;
             return false;
@@ -29,7 +31,8 @@ internal partial class ExternalWorkerAgent
         var currentIndex = 0;
         WinAPI.EnumChildWindows(_workerWindowPtr, (hWnd, lParam) =>
         {
-            if (!recursive && WinAPI.GetParent(hWnd) != _workerWindowPtr) return true;
+            if (!recursive && WinAPI.GetParent(hWnd) != _workerWindowPtr) 
+                return true;
 
             if (currentIndex == index)
             {
@@ -43,19 +46,21 @@ internal partial class ExternalWorkerAgent
         }, IntPtr.Zero);
 
         if (childWindowPtr != IntPtr.Zero && !string.IsNullOrEmpty(assertedClass))
+        {
             if (WinAPIUtils.GetWindowClass(childWindowPtr) != assertedClass)
                 return IntPtr.Zero;
+        }
 
         return childWindowPtr;
     }
 
     private void RemoveTrayIcon()
     {
-        var data = new WinAPI.NOTIFYICONDATA
+        var data = new WinAPI.NOTIFYICONDATAA
         {
             hWnd = _workerWindowPtr,
             uID = ID_TRAY_APP_ICON
         };
-        WinAPI.Shell_NotifyIcon(WinAPI.NotifyIconMessages.NIM_DELETE, data);
+        WinAPI.Shell_NotifyIconA(WinAPI.NotifyIconMessages.NIM_DELETE, data);
     }
 }

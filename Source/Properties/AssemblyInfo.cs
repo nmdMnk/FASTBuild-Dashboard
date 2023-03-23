@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Hillinworks / Nine Worlds Studios GmbH")]
 [assembly: AssemblyProduct("FASTBuild Dashboard")]
-[assembly: AssemblyCopyright("Copyright © Hillinworks 2017 / Nine Worlds Studios 2022")]
+[assembly: AssemblyCopyright("Copyright © Hillinworks 2017 / Nine Worlds Studios 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -49,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.94.1.105")]
-[assembly: AssemblyFileVersion("0.94.1.105")]
+[assembly: AssemblyVersion("1.0.0.106")]
+[assembly: AssemblyFileVersion("1.0.0.106")]

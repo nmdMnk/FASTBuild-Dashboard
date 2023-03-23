@@ -57,7 +57,7 @@
                                Margin="0,24,0,0" />
 
                     <TextBlock Margin="0,8,0,0">
-                        © 2017 Hillinworks. This software is licenced under the
+                        ©2023 Nine Worlds Studios, © 2017 Hillinworks. This software is licenced under the 
                         <Hyperlink NavigateUri="https://github.com/hillin/FASTBuild-Dashboard/blob/master/LICENSE">MIT License</Hyperlink>
                         .
                     </TextBlock>

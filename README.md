@@ -25,6 +25,7 @@ New
 
 Improvements
 - Updated solution to .NET4.8 + updated all nuget packages to recent versions
+- Updated FastBuild to v1.09
 
 Fixes
 - Fixed auto scrolling in build view

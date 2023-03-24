@@ -15,9 +15,19 @@ __New Improvements__
 - Removed start with windows (done via installer)
 - Bugfixes
 
-![Screenshot of FBD 1.0.1](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/blob/master/Documentations/Screenshots/FASTBuild-Dashboard.1.0.1.png?raw=true)
+![Screenshot of FBD 1.1.0](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/blob/master/Documentations/Screenshots/FASTBuild-Dashboard.1.1.0.png?raw=true)
 
 ## Changelog 
+### 1.1.0.108
+Changes
+- Changed way how worker settings are applied: Instead of setting the dropdown values of the worker window, the .settings file is used instead & the worker is auto restarted when idle to apply settings. This way it should be more reliable and consistent.
+
+Improvements
+- Updated status color scheme + top bar color
+- Added FBuild Dashboard icon to open burger menu
+- Added/ Fixed feedback when worker is not running in Local Worker page
+- Added feedback when worker is waiting for restart to apply settings
+
 ### 1.0.1.107
 Fixes
 - Fixed active worker, pool and core counts not visible due to bad coloring

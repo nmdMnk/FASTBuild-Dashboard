@@ -21,7 +21,7 @@ internal class AppBootstrapper : BootstrapperBase
 
     public AppBootstrapper()
     {
-        this.Initialize();
+        Initialize();
     }
 
     protected override void Configure()
@@ -60,11 +60,11 @@ internal class AppBootstrapper : BootstrapperBase
 
 			if (App.Current.DoNotSpawnShadowExecutable || App.Current.IsShadowProcess)
 			{
-				this.DisplayRootViewForAsync<MainWindowViewModel>();
+				DisplayRootViewForAsync<MainWindowViewModel>();
 			}
 			else
 			{
-				AppBootstrapper.SpawnShadowProcess(e, assemblyLocation);
+				SpawnShadowProcess(e, assemblyLocation);
 				Environment.Exit(0);
 			}
 #endif

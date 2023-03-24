@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using FastBuild.Dashboard.Configuration;
@@ -41,39 +40,8 @@ public partial class App : ISingleInstanceApp
 
     internal void RaiseOnDeactivated()
     {
-        this.OnDeactivated(EventArgs.Empty);
+        OnDeactivated(EventArgs.Empty);
     }
-
-    /*
-    public bool SetStartupWithWindows(bool startUp)
-    {
-        var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-        var entryAssembly = Assembly.GetEntryAssembly();
-
-        if (key != null && !string.IsNullOrEmpty(entryAssembly.Location))
-        {
-            if (startUp)
-            {
-                var location = entryAssembly.Location;
-                if (this.ShadowContext != null && !string.IsNullOrEmpty(this.ShadowContext.OriginalLocation))
-                {
-                    location = this.ShadowContext.OriginalLocation;
-                }
-                Debug.Assert(location != null, "location != null");
-
-                key.SetValue(entryAssembly.GetName().Name, $"\"{location}\" -minimized");
-            }
-            else
-            {
-                key.DeleteValue(entryAssembly.GetName().Name, false);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-    */
 
     public void ProcessArgs(string[] args)
     {

@@ -47,6 +47,7 @@ public partial class BuildSessionView
     {
         var horizontalOffset = ContentScrollViewer.HorizontalOffset;
         if (_isAutoScrollingContent)
+        {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (horizontalOffset ==
                 _previousHorizontalScrollOffset) // which means the scroll is not actually changed, but content size is changed
@@ -54,6 +55,7 @@ public partial class BuildSessionView
                 ContentScrollViewer.ScrollToRightEnd();
                 horizontalOffset = ContentScrollViewer.ScrollableWidth;
             }
+        }
 
         // if we are scrolled to the right end, turn on auto scrolling
         _isAutoScrollingContent = Math.Abs(horizontalOffset - ContentScrollViewer.ScrollableWidth) < 1;

@@ -56,10 +56,10 @@ internal class BuildJobViewModel : PropertyChangedBase, IBuildJobViewModel
             if (value.Equals(_elapsedSeconds)) return;
 
             _elapsedSeconds = value;
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(EndTime));
-            this.NotifyOfPropertyChange(nameof(EndTimeOffset));
-            this.NotifyOfPropertyChange(nameof(DisplayElapsedSeconds));
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(EndTime));
+            NotifyOfPropertyChange(nameof(EndTimeOffset));
+            NotifyOfPropertyChange(nameof(DisplayElapsedSeconds));
         }
     }
 
@@ -70,10 +70,10 @@ internal class BuildJobViewModel : PropertyChangedBase, IBuildJobViewModel
         get => _uiBorderPen;
         private set
         {
-            if (object.Equals(value, _uiBorderPen)) return;
+            if (Equals(value, _uiBorderPen)) return;
 
             _uiBorderPen = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -88,9 +88,9 @@ internal class BuildJobViewModel : PropertyChangedBase, IBuildJobViewModel
             if (value == _message) return;
 
             _message = value;
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(HasError));
-            this.NotifyOfPropertyChange(nameof(ShouldShowErrorMessage));
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(HasError));
+            NotifyOfPropertyChange(nameof(ShouldShowErrorMessage));
         }
     }
 
@@ -102,7 +102,7 @@ internal class BuildJobViewModel : PropertyChangedBase, IBuildJobViewModel
             if (Equals(value, _errorGroups)) return;
 
             _errorGroups = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -114,12 +114,12 @@ internal class BuildJobViewModel : PropertyChangedBase, IBuildJobViewModel
             if (value == _status) return;
 
             _status = value;
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(IsFinished));
-            this.NotifyOfPropertyChange(nameof(ElapsedSeconds));
-            this.NotifyOfPropertyChange(nameof(DisplayStatus));
-            this.NotifyOfPropertyChange(nameof(HasError));
-            this.NotifyOfPropertyChange(nameof(ShouldShowErrorMessage));
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(IsFinished));
+            NotifyOfPropertyChange(nameof(ElapsedSeconds));
+            NotifyOfPropertyChange(nameof(DisplayStatus));
+            NotifyOfPropertyChange(nameof(HasError));
+            NotifyOfPropertyChange(nameof(ShouldShowErrorMessage));
             UpdateUIBrushes();
         }
     }
@@ -171,10 +171,10 @@ internal class BuildJobViewModel : PropertyChangedBase, IBuildJobViewModel
         get => _uiForeground;
         private set
         {
-            if (object.Equals(value, _uiForeground)) return;
+            if (Equals(value, _uiForeground)) return;
 
             _uiForeground = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -183,10 +183,10 @@ internal class BuildJobViewModel : PropertyChangedBase, IBuildJobViewModel
         get => _uiBackground;
         private set
         {
-            if (object.Equals(value, _uiBackground)) return;
+            if (Equals(value, _uiBackground)) return;
 
             _uiBackground = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -195,10 +195,10 @@ internal class BuildJobViewModel : PropertyChangedBase, IBuildJobViewModel
         get => _uiBorderBrush;
         private set
         {
-            if (object.Equals(value, _uiBorderBrush)) return;
+            if (Equals(value, _uiBorderBrush)) return;
 
             _uiBorderBrush = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 

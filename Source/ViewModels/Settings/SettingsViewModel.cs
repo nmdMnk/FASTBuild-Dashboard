@@ -14,13 +14,21 @@ internal sealed partial class SettingsViewModel : ValidatingScreen<SettingsViewM
 {
     public SettingsViewModel()
     {
-        MaximumCores = Environment.ProcessorCount;
-        CoreTicks = new DoubleCollection(Enumerable.Range(1, MaximumCores).Select(i => (double)i));
+        MaximumCores = (uint)Environment.ProcessorCount;
+        CoreTicks = new DoubleCollection(Enumerable.Range(1, (int)MaximumCores).Select(i => (double)i));
 
-        this.DisplayName = "Settings";
+        DisplayName = "Settings";
 
         var brokerageService = IoC.Get<IBrokerageService>();
         brokerageService.WorkerCountChanged += BrokerageService_WorkerCountChanged;
+
+        var workerService = IoC.Get<IWorkerAgentService>();
+        workerService.WorkerRunStateChanged += WorkerServiceOnWorkerRunStateChanged;
+    }
+
+    private void WorkerServiceOnWorkerRunStateChanged(object sender, WorkerRunStateChangedEventArgs e)
+    {
+        NotifyOfPropertyChange(nameof(WorkerStatusText));
     }
 
     [CustomValidation(typeof(SettingsValidator), "ValidateFolderPath")]
@@ -30,7 +38,7 @@ internal sealed partial class SettingsViewModel : ValidatingScreen<SettingsViewM
         set
         {
             IoC.Get<IBrokerageService>().BrokeragePath = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -41,7 +49,7 @@ internal sealed partial class SettingsViewModel : ValidatingScreen<SettingsViewM
         set
         {
             Environment.SetEnvironmentVariable("FASTBUILD_CACHE_PATH", value);
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -62,82 +70,84 @@ internal sealed partial class SettingsViewModel : ValidatingScreen<SettingsViewM
         }
     }
 
+    public string WorkerStatusText
+    {
+        get
+        {
+            var worker = IoC.Get<IWorkerAgentService>();
+            if (worker.IsPendingRestart)
+                return "Settings will be applied when worker is idle. Waiting for worker to be idle ... ";
+            
+            return "";
+        }
+    }
+
     public int WorkerMode
     {
         get => (int)IoC.Get<IWorkerAgentService>().WorkerMode;
         set
         {
-            IoC.Get<IWorkerAgentService>().WorkerMode = (WorkerMode)value;
-            WorkerModeChanged?.Invoke(this, (WorkerMode)value);
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(WorkerThresholdEnabled));
+            IoC.Get<IWorkerAgentService>().WorkerMode = (WorkerSettings.WorkerModeSetting)value;
+            WorkerModeChanged?.Invoke(this, (WorkerSettings.WorkerModeSetting)value);
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(WorkerThresholdEnabled));
+            NotifyOfPropertyChange(nameof(WorkerStatusText));
         }
     }
 
     public bool WorkerThresholdEnabled =>
-        IoC.Get<IWorkerAgentService>().WorkerMode == Services.Worker.WorkerMode.WorkWhenIdle;
+        IoC.Get<IWorkerAgentService>().WorkerMode == WorkerSettings.WorkerModeSetting.WorkWhenIdle;
 
-    public int WorkerThreshold
+    public uint WorkerThreshold
     {
-        get => (int)IoC.Get<IWorkerAgentService>().WorkerThreshold;
+        get => IoC.Get<IWorkerAgentService>().WorkerThreshold / 10;
         set
         {
-            IoC.Get<IWorkerAgentService>().WorkerThreshold = value;
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(DisplayThreshold));
+            IoC.Get<IWorkerAgentService>().WorkerThreshold = value * 10;
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(DisplayThreshold));
+            NotifyOfPropertyChange(nameof(WorkerStatusText));
         }
     }
 
     public string DisplayThreshold => $"{WorkerThreshold * 10}%";
 
-    public int WorkerCores
+    public uint WorkerCores
     {
         get => IoC.Get<IWorkerAgentService>().WorkerCores;
         set
         {
             IoC.Get<IWorkerAgentService>().WorkerCores = Math.Max(1, Math.Min(MaximumCores, value));
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(DisplayCores));
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(DisplayCores));
+            NotifyOfPropertyChange(nameof(WorkerStatusText));
         }
     }
 
     public string DisplayCores => WorkerCores == 1 ? "1 core" : $"up to {WorkerCores} cores";
 
-    public int WorkerMinFreeMemoryMiB
+    public uint WorkerMinFreeMemoryMiB
     {
         get => IoC.Get<IWorkerAgentService>().MinFreeMemoryMiB;
         set
         {
             IoC.Get<IWorkerAgentService>().MinFreeMemoryMiB = Math.Max(0, value);
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(DisplayMinFreeMemoryMiB));
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(DisplayMinFreeMemoryMiB));
+            NotifyOfPropertyChange(nameof(WorkerStatusText));
         }
     }
     public string DisplayMinFreeMemoryMiB => $"{WorkerMinFreeMemoryMiB} MiB";
 
-    /*
-    public bool StartWithWindows
-    {
-        get => AppSettings.Default.StartWithWindows;
-        set
-        {
-            AppSettings.Default.StartWithWindows = value;
-            AppSettings.Default.Save();
-            App.Current.SetStartupWithWindows(value);
-            this.NotifyOfPropertyChange();
-        }
-    }
-    */
-
-    public int MaximumCores { get; }
+    public uint MaximumCores { get; }
     public DoubleCollection CoreTicks { get; }
 
     public string Icon => "Settings";
-    public event EventHandler<WorkerMode> WorkerModeChanged;
+    public event EventHandler<WorkerSettings.WorkerModeSetting> WorkerModeChanged;
 
     private void BrokerageService_WorkerCountChanged(object sender, EventArgs e)
     {
-        this.NotifyOfPropertyChange(nameof(DisplayWorkersInPool));
+        NotifyOfPropertyChange(nameof(DisplayWorkersInPool));
     }
 
     public void BrowseBrokeragePath()
@@ -159,7 +169,8 @@ internal sealed partial class SettingsViewModel : ValidatingScreen<SettingsViewM
             ShowNewFolderButton = false
         };
 
-        if (dialog.ShowDialog(App.Current.MainWindow) == true) return dialog.SelectedPath;
+        if (dialog.ShowDialog(App.Current.MainWindow) == true) 
+            return dialog.SelectedPath;
 
         return null;
     }

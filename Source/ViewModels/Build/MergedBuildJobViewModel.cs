@@ -27,18 +27,18 @@ internal sealed class MergedBuildJobViewModel : PropertyChangedBase, IBuildJobVi
     {
         _mergedJobs.AddLast(job);
         OnJobsChanged();
-        this.NotifyOfPropertyChange(nameof(EndTimeOffset));
+        NotifyOfPropertyChange(nameof(EndTimeOffset));
     }
 
     public void AddFirst(BuildJobViewModel job)
     {
         _mergedJobs.AddFirst(job);
         OnJobsChanged();
-        this.NotifyOfPropertyChange(nameof(StartTimeOffset));
+        NotifyOfPropertyChange(nameof(StartTimeOffset));
     }
 
     private void OnJobsChanged()
     {
-        this.NotifyOfPropertyChange(nameof(DisplayName));
+        NotifyOfPropertyChange(nameof(DisplayName));
     }
 }

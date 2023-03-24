@@ -20,16 +20,14 @@
     </UserControl.Resources>
 
     <DockPanel>
-
         <build:BuildSessionStatusView DockPanel.Dock="Bottom"
                                       DataContext="{Binding}"
-                                      IsEnabled="{Binding IsSessionViewVisible}" />
+                                      IsEnabled="{Binding IsSessionViewVisible}"
+                                      Background="{DynamicResource MaterialDesignPaper}"/>
 
         <Grid>
-
             <Border x:Name="IsSessionViewVisible">
                 <Grid>
-
                     <ScrollViewer x:Name="BackgroundScrollViewer"
                                   IsEnabled="False"
                                   IsHitTestVisible="False"
@@ -78,20 +76,16 @@
                                                                  HorizontalAlignment="Left" />
                         </DockPanel>
                     </ScrollViewer>
-
-                    <!--<build:TimeRulerView x:Name="TimeRuler" 
-                                         Margin="0,0,17,16.5"
-                                         VerticalAlignment="Bottom"
-                                         Height="24" />-->
-
+                    
                     <Grid Margin="0,0,17,16.5"
                           VerticalAlignment="Bottom"
-                          Background="{DynamicResource MaterialDesignBackground}"
+                          Background="{DynamicResource MaterialDesignPaper}"
                           Height="24">
 
                         <build:TimeRulerView x:Name="TimeRuler"
                                              MinorTickBrush="{DynamicResource MaterialDesignBodyLight}"
-                                             MajorTickBrush="{DynamicResource MaterialDesignBody}">
+                                             MajorTickBrush="{DynamicResource MaterialDesignBody}"
+                                             Background="{DynamicResource MaterialDesignPaper}">
                             <build:TimeRulerView.TimeLabelStyle>
                                 <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignBody2TextBlock}">
                                     <Setter Property="FontSize" Value="10" />

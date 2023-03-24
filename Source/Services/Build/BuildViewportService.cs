@@ -18,7 +18,8 @@ internal class BuildViewportService : IBuildViewportService
         set
         {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (_scaling == value) return;
+            if (_scaling == value) 
+                return;
 
             _scaling = Math.Min(Math.Max(value, MinimumScaling), MaximumScaling);
             ScalingChanged?.Invoke(this, EventArgs.Empty);
@@ -49,7 +50,8 @@ internal class BuildViewportService : IBuildViewportService
     [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public void SetViewTimeRange(double startTime, double endTime)
     {
-        if (ViewStartTimeOffsetSeconds == startTime && ViewEndTimeOffsetSeconds == endTime) return;
+        if (ViewStartTimeOffsetSeconds == startTime && ViewEndTimeOffsetSeconds == endTime) 
+            return;
 
         ViewStartTimeOffsetSeconds = startTime;
         ViewEndTimeOffsetSeconds = endTime;
@@ -60,7 +62,8 @@ internal class BuildViewportService : IBuildViewportService
     [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public void SetVerticalViewRange(double top, double bottom)
     {
-        if (ViewTop == top && ViewBottom == bottom) return;
+        if (ViewTop == top && ViewBottom == bottom) 
+            return;
 
         ViewTop = top;
         ViewBottom = bottom;

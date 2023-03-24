@@ -167,13 +167,14 @@
 
                     <TextBlock Style="{StaticResource SectionTitle}"
                                Text="Worker" />
+                    <TextBlock Text="{Binding WorkerStatusText}"
+                               Foreground="{StaticResource JobBackgroundBrush_Failed}"/>
 
                     <StackPanel Style="{StaticResource OptionContainer}">
                         <TextBlock Style="{StaticResource OptionTitle}"
                                    Text="Mode" />
 
                         <DockPanel Style="{StaticResource OptionContent}">
-
                             <Grid IsHitTestVisible="True"
                                   Background="Transparent"
                                   DockPanel.Dock="Right"
@@ -237,7 +238,6 @@
                     <StackPanel Style="{StaticResource OptionContainer}">
                         <TextBlock Style="{StaticResource OptionTitle}"
                                    Text="Minimum Free Memory" />
-                        
 
                         <DockPanel Style="{StaticResource OptionContent}">
                             <Grid IsHitTestVisible="True"
@@ -259,8 +259,6 @@
                                        AcceptsReturn="False"
                                        PreviewTextInput="WorkerMinFreeMemory_OnPreviewTextInput"/>
                         </DockPanel>
-                        
-                        
                     </StackPanel>
 
                     <Border Style="{StaticResource Separator}" />

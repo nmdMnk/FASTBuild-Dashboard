@@ -27,11 +27,12 @@ internal partial class ExternalWorkerAgent
 
     private IntPtr GetChildWindow(int index, string assertedClass, bool recursive = false)
     {
+        var workerWindowPtr = FindExistingWorkerWindow();
         var childWindowPtr = IntPtr.Zero;
         var currentIndex = 0;
-        WinAPI.EnumChildWindows(_workerWindowPtr, (hWnd, lParam) =>
+        WinAPI.EnumChildWindows(workerWindowPtr, (hWnd, lParam) =>
         {
-            if (!recursive && WinAPI.GetParent(hWnd) != _workerWindowPtr) 
+            if (!recursive && WinAPI.GetParent(hWnd) != workerWindowPtr) 
                 return true;
 
             if (currentIndex == index)
@@ -54,13 +55,17 @@ internal partial class ExternalWorkerAgent
         return childWindowPtr;
     }
 
-    private void RemoveTrayIcon()
+    private void HideWorkerVisuals()
     {
+        var workerWindowPtr = _workerProcess.MainWindowHandle;
+
         var data = new WinAPI.NOTIFYICONDATAA
         {
-            hWnd = _workerWindowPtr,
+            hWnd = workerWindowPtr,
             uID = ID_TRAY_APP_ICON
         };
-        WinAPI.Shell_NotifyIconA(WinAPI.NotifyIconMessages.NIM_DELETE, data);
+        _workerHidden = WinAPI.Shell_NotifyIconA(WinAPI.NotifyIconMessages.NIM_DELETE, data);
+        if (_workerHidden)
+            WinAPI.ShowWindow(_workerProcess.MainWindowHandle, 0);
     }
 }

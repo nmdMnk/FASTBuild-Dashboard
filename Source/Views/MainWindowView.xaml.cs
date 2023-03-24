@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using FastBuild.Dashboard.Configuration;
@@ -24,13 +25,13 @@ public partial class MainWindowView
         _trayNotifier = new TrayNotifier(this);
         UpdateTrayIcon();
 
-        this.DataContextChanged += OnDataContextChanged;
-        this.Loaded += OnLoaded;
+        DataContextChanged += OnDataContextChanged;
+        Loaded += OnLoaded;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (App.Current.StartMinimized) this.Hide();
+        if (App.Current.StartMinimized) Hide();
     }
 
     protected override void OnClosing(CancelEventArgs e)
@@ -39,7 +40,7 @@ public partial class MainWindowView
         {
             e.Cancel = true;
 
-            this.Hide();
+            Hide();
         }
 
         _isClosingFromXButton = true;
@@ -55,7 +56,8 @@ public partial class MainWindowView
     private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         var vm = e.NewValue as MainWindowViewModel;
-        if (vm == null) return;
+        if (vm == null) 
+            return;
 
         vm.BuildWatcherPage.WorkingStateChanged += BuildWatcherPage_WorkingStateChanged;
         vm.SettingsPage.WorkerModeChanged += SettingsPage_WorkerModeChanged;
@@ -68,7 +70,7 @@ public partial class MainWindowView
         UpdateTrayIcon();
     }
 
-    private void SettingsPage_WorkerModeChanged(object sender, WorkerMode mode)
+    private void SettingsPage_WorkerModeChanged(object sender, WorkerSettings.WorkerModeSetting mode)
     {
         UpdateTrayIcon();
     }
@@ -82,26 +84,26 @@ public partial class MainWindowView
         }
         else
         {
-            this.Left = Profile.Default.WindowLeft;
-            this.Top = Profile.Default.WindowTop;
+            Left = Profile.Default.WindowLeft;
+            Top = Profile.Default.WindowTop;
         }
 
-        this.Width = Profile.Default.WindowWidth;
-        this.Height = Profile.Default.WindowHeight;
+        Width = Profile.Default.WindowWidth;
+        Height = Profile.Default.WindowHeight;
 
         if (App.Current.StartMinimized)
         {
-            this.WindowState = WindowState.Minimized;
-            this.Hide();
+            WindowState = WindowState.Minimized;
+            Hide();
         }
         else
         {
-            this.WindowState = Profile.Default.WindowState;
+            WindowState = Profile.Default.WindowState;
         }
 
-        this.LocationChanged += MainWindowView_LocationChanged;
-        this.SizeChanged += MainWindowView_SizeChanged;
-        this.StateChanged += MainWindowView_StateChanged;
+        LocationChanged += MainWindowView_LocationChanged;
+        SizeChanged += MainWindowView_SizeChanged;
+        StateChanged += MainWindowView_StateChanged;
 
         _delayUpdateProfileTimer = new DispatcherTimer
         {
@@ -115,24 +117,17 @@ public partial class MainWindowView
     {
         _delayUpdateProfileTimer.Stop();
 
-        Profile.Default.WindowLeft = (int)this.Left;
-        Profile.Default.WindowTop = (int)this.Top;
-        if (this.WindowState != WindowState.Minimized) Profile.Default.WindowState = this.WindowState;
-        Profile.Default.WindowWidth = (int)this.Width;
-        Profile.Default.WindowHeight = (int)this.Height;
+        Profile.Default.WindowLeft = (int)Left;
+        Profile.Default.WindowTop = (int)Top;
+        if (WindowState != WindowState.Minimized) Profile.Default.WindowState = WindowState;
+        Profile.Default.WindowWidth = (int)Width;
+        Profile.Default.WindowHeight = (int)Height;
         Profile.Default.Save();
     }
 
     private void MainWindowView_StateChanged(object sender, EventArgs e)
     {
         StartDelayedProfileUpdate();
-
-        /*
-        if (this.WindowState == WindowState.Minimized)
-        {
-            this.Hide();
-        }
-        */
     }
 
     private void StartDelayedProfileUpdate()
@@ -151,7 +146,7 @@ public partial class MainWindowView
         StartDelayedProfileUpdate();
     }
 
-    private void ListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         MenuToggleButton.IsChecked = false;
     }
@@ -159,27 +154,27 @@ public partial class MainWindowView
     public void CloseApplication()
     {
         _isClosingFromXButton = false;
-        this.Close();
+        Close();
     }
 
     public void ShowAndActivate()
     {
-        this.Show();
-        if (this.WindowState == WindowState.Minimized) this.WindowState = Profile.Default.WindowState;
+        Show();
+        if (WindowState == WindowState.Minimized)
+            WindowState = Profile.Default.WindowState;
 
-        this.Activate();
+        Activate();
     }
 
     public void ChangeWorkerMode(int workerMode)
     {
-        if (_viewModel != null) _viewModel.SettingsPage.WorkerMode = workerMode;
+        if (_viewModel != null)
+            _viewModel.SettingsPage.WorkerMode = workerMode;
     }
 
     private bool IsWorkerEnabled()
     {
-        if (IoC.Get<IWorkerAgentService>().WorkerMode == WorkerMode.Disabled)
-            return false;
-        return true;
+        return IoC.Get<IWorkerAgentService>().WorkerMode != WorkerSettings.WorkerModeSetting.Disabled;
     }
 
     private void UpdateTrayIcon()

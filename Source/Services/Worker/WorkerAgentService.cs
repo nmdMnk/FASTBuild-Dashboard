@@ -1,5 +1,4 @@
 ﻿using System;
-using FastBuild.Dashboard.Configuration;
 using FastBuild.Dashboard.Services.RemoteWorker;
 
 namespace FastBuild.Dashboard.Services.Worker;
@@ -14,77 +13,45 @@ internal class WorkerAgentService : IWorkerAgentService
         _workerAgent.WorkerRunStateChanged += WorkerAgent_WorkerRunStateChanged;
     }
 
-    public int WorkerCores
+    public uint WorkerCores
     {
-        get
-        {
-            var cores = AppSettings.Default.WorkerCores;
-            if (cores <= 0) cores = Environment.ProcessorCount;
-
-            return cores;
-        }
+        get => _workerAgent.GetSettings().NumCPUsToUse;
         set
         {
-            AppSettings.Default.WorkerCores = value;
-            AppSettings.Default.Save();
-
-            if (_workerAgent.IsRunning) 
-                _workerAgent.SetCoreCount(WorkerCores);
+            value = Math.Min(value, (uint)Environment.ProcessorCount);
+            _workerAgent.SetCoreCount(value);
         }
     }
 
-    public int WorkerThreshold
+    public uint WorkerThreshold
     {
-        get => AppSettings.Default.WorkerThreshold;
+        get => _workerAgent.GetSettings().IdleThresholdPercent;
         set
         {
-            AppSettings.Default.WorkerThreshold = value;
-            AppSettings.Default.Save();
-
-            if (_workerAgent.IsRunning) 
-                _workerAgent.SetThresholdValue(WorkerThreshold);
+            value = Math.Min(value, 100);
+            _workerAgent.SetThresholdValue(value);
         }
     }
 
-    public WorkerMode WorkerMode
+    public WorkerSettings.WorkerModeSetting WorkerMode
     {
-        get => (WorkerMode)AppSettings.Default.WorkerMode;
-        set
-        {
-            AppSettings.Default.WorkerMode = (int)value;
-            AppSettings.Default.Save();
-
-            if (_workerAgent.IsRunning) 
-                _workerAgent.SetWorkerMode(WorkerMode);
-        }
+        get => _workerAgent.GetSettings().WorkerMode;
+        set => _workerAgent.SetWorkerMode(value);
     }
 
-    public int MinFreeMemoryMiB
+    public uint MinFreeMemoryMiB
     {
-        get => AppSettings.Default.WorkerMinFreeMemoryMiB;
-        set
-        {
-            AppSettings.Default.WorkerMinFreeMemoryMiB = value;
-            AppSettings.Default.Save();
-            
-            // Nothing we can do atm, worker needs restart to start with new param
-            // #todo Implement auto restart when worker is idle and new settings are available
-            // if (_workerAgent.IsRunning)
-            //     _workerAgent.Restart();
-        }
+        get => _workerAgent.GetSettings().MinimumFreeMemoryMiB;
+        set => _workerAgent.SetMinimumFreeMemoryMiB(value);
     }
 
     public bool IsRunning => _workerAgent.IsRunning;
+    public bool IsPendingRestart => _workerAgent.IsRunning && _workerAgent.GetSettings().SettingsAreDirty;
     public event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;
 
     public void Initialize()
     {
         _workerAgent.Initialize();
-        if (_workerAgent.IsRunning)
-        {
-            _workerAgent.SetCoreCount(WorkerCores);
-            _workerAgent.SetWorkerMode(WorkerMode);
-        }
     }
 
     public WorkerCoreStatus[] GetStatus()

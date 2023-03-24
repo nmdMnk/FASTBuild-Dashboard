@@ -25,14 +25,18 @@
                                   Margin="8" />
                 </ScrollViewer>
 
-                <Border Background="#E0FFFFFF"
-                        Visibility="{Binding IsWorkerRunning, Converter={support:BoolToVisibilityConverter TrueValue=Hidden, FalseValue=Visible}}">
+                <Border Background="{DynamicResource MaterialDesignPaper}" Visibility="{Binding IsWorkerRunning, Converter={support:BoolToVisibilityConverter TrueValue=Hidden, FalseValue=Visible}}">
                     <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="The worker is not running due to an error occurred"
                                    Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                   Foreground="{StaticResource JobBorderBrush_Error}"
+                                   FontSize="16"
                                    HorizontalAlignment="Center" />
-                        <TextBlock x:Name="WorkerErrorMessage"
-                                   Margin="0,16,0,0"
+                        <TextBlock Margin="0,16,0,0"
+                                   Text="{Binding WorkerErrorMessage}"
+                                   Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                   Foreground="{StaticResource JobBorderBrush_Error}"
+                                   FontSize="16"
                                    HorizontalAlignment="Center" />
                     </StackPanel>
                 </Border>

@@ -50,30 +50,30 @@ internal class TimeRulerView : Control
         var buildViewportService = IoC.Get<IBuildViewportService>();
         buildViewportService.ScalingChanged += OnPreScalingChanged;
         buildViewportService.ViewTimeRangeChanged += OnViewTimeRangeChanged;
-        this.ClipToBounds = true;
+        ClipToBounds = true;
 
-        this.Loaded += OnLoaded;
+        Loaded += OnLoaded;
     }
 
 
     public Brush MinorTickBrush
     {
-        get => (Brush)this.GetValue(MinorTickBrushProperty);
-        set => this.SetValue(MinorTickBrushProperty, value);
+        get => (Brush)GetValue(MinorTickBrushProperty);
+        set => SetValue(MinorTickBrushProperty, value);
     }
 
 
     public Brush MajorTickBrush
     {
-        get => (Brush)this.GetValue(MajorTickBrushProperty);
-        set => this.SetValue(MajorTickBrushProperty, value);
+        get => (Brush)GetValue(MajorTickBrushProperty);
+        set => SetValue(MajorTickBrushProperty, value);
     }
 
 
     public Style TimeLabelStyle
     {
-        get => (Style)this.GetValue(TimeLabelStyleProperty);
-        set => this.SetValue(TimeLabelStyleProperty, value);
+        get => (Style)GetValue(TimeLabelStyleProperty);
+        set => SetValue(TimeLabelStyleProperty, value);
     }
 
     private static GrainStop CalculateGrain(double scaling)
@@ -138,17 +138,17 @@ internal class TimeRulerView : Control
             _timeLabelStyleBridge.FontWeight,
             _timeLabelStyleBridge.FontStretch);
 
-        this.InvalidateVisual();
+        InvalidateVisual();
     }
 
     private void OnViewTimeRangeChanged(object sender, EventArgs e)
     {
-        this.InvalidateVisual();
+        InvalidateVisual();
     }
 
     private void OnPreScalingChanged(object sender, EventArgs e)
     {
-        this.InvalidateVisual();
+        InvalidateVisual();
     }
 
 
@@ -156,7 +156,7 @@ internal class TimeRulerView : Control
     {
         base.OnRender(dc);
 
-        dc.DrawRectangle(this.Background, null, LayoutInformation.GetLayoutSlot(this));
+        dc.DrawRectangle(Background, null, LayoutInformation.GetLayoutSlot(this));
 
         var buildViewportService = IoC.Get<IBuildViewportService>();
 
@@ -194,12 +194,12 @@ internal class TimeRulerView : Control
 
     private void DrawMinorTick(DrawingContext dc, double x)
     {
-        dc.DrawRectangle(MinorTickBrush, null, new Rect(x - 0.5, this.ActualHeight - 8, 1, 8));
+        dc.DrawRectangle(MinorTickBrush, null, new Rect(x - 0.5, ActualHeight - 8, 1, 8));
     }
 
     private void DrawMajorTick(DrawingContext dc, double x, double time, string labelTextFormat)
     {
-        dc.DrawRectangle(MajorTickBrush, null, new Rect(x - 1, this.ActualHeight - 10, 2, 10));
+        dc.DrawRectangle(MajorTickBrush, null, new Rect(x - 1, ActualHeight - 10, 2, 10));
 
         if (time > 0)
         {
@@ -215,7 +215,7 @@ internal class TimeRulerView : Control
                 MajorTickBrush, 
                 VisualTreeHelper.GetDpi(this).PixelsPerDip);
 
-            dc.DrawText(text, new Point(x - text.Width / 2, this.ActualHeight - 22));
+            dc.DrawText(text, new Point(x - text.Width / 2, ActualHeight - 22));
         }
     }
 

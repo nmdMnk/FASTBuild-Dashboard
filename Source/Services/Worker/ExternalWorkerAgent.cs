@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Management;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -20,33 +20,39 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
     private bool _hasAppExited;
 
     private IRemoteWorkerAgent _localWorker;
-    private uint _workerProcessId;
 
-    private IntPtr _workerWindowPtr;
+    private WorkerSettings _settings;
+    private Process _workerProcess;
 
     public ExternalWorkerAgent()
     {
         Application.Current.Exit += Application_Exit;
+        _settings = new WorkerSettings(WorkerExecutablePath);
     }
 
-    public bool IsRunning { get; private set; }
+    public bool IsRunning => !_isStartingWorker && _workerProcess != null && !_workerProcess.HasExited;
+
+    private bool _initialized;
+    private bool _isStartingWorker = true;
+    private bool _workerHidden = false;
 
     public event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;
 
     public void Initialize()
     {
-        _workerWindowPtr = FindExistingWorkerWindow();
-        if (_workerWindowPtr == IntPtr.Zero)
-        {
-            StartNewWorker();
-        }
-        else
-        {
-            InitializeWorker();
-            OnWorkerStarted();
-        }
-
-        if (IsRunning) StartWorkerGuardian();
+        if (_initialized)
+            return;
+            
+        if (IsRunning)
+            return;
+        
+        if (FindExistingWorker())
+            _workerProcess.Kill(); // Could be any instance but we want to make sure its spawned by us
+        
+        StartNewWorker();
+        
+        Task.Factory.StartNew(WorkerWatchdog);
+        _initialized = true;
     }
 
     public WorkerCoreStatus[] GetStatus()
@@ -160,43 +166,24 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         return result;
     }
 
-    public void SetCoreCount(int coreCount)
+    public WorkerSettings GetSettings()
     {
-        var comboBoxPtr = GetChildWindow(5, "ComboBox");
-
-        if (comboBoxPtr == IntPtr.Zero)
-        {
-            OnWorkerErrorOccurred("An incompatible worker is running");
-            return;
-        }
-
-        WinAPIUtils.SetComboBoxSelectedIndex(comboBoxPtr, coreCount - 1);
+        return _settings;
     }
 
-    public void SetThresholdValue(int threshold)
+    public void SetCoreCount(uint coreCount)
     {
-        var comboBoxPtr = GetChildWindow(3, "ComboBox");
-
-        if (comboBoxPtr == IntPtr.Zero)
-        {
-            OnWorkerErrorOccurred("An incompatible worker is running");
-            return;
-        }
-
-        WinAPIUtils.SetComboBoxSelectedIndex(comboBoxPtr, threshold - 1);
+        _settings.NumCPUsToUse = coreCount;
     }
 
-    public void SetWorkerMode(WorkerMode mode)
+    public void SetThresholdValue(uint threshold)
     {
-        var comboBoxPtr = GetChildWindow(1, "ComboBox");
+        _settings.IdleThresholdPercent = threshold;
+    }
 
-        if (comboBoxPtr == IntPtr.Zero)
-        {
-            OnWorkerErrorOccurred("An incompatible worker is running");
-            return;
-        }
-
-        WinAPIUtils.SetComboBoxSelectedIndex(comboBoxPtr, (int)mode);
+    public void SetWorkerMode(WorkerSettings.WorkerModeSetting mode)
+    {
+        _settings.WorkerMode = mode;
     }
 
     public void SetLocalWorker(IRemoteWorkerAgent worker)
@@ -207,11 +194,31 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         _localWorker = worker;
     }
 
+    public void SetMinimumFreeMemoryMiB(uint memory)
+    {
+        _settings.MinimumFreeMemoryMiB = memory;
+        _settings.Save();
+    }
+
+    public void RestartWorker()
+    {
+        _workerProcess?.Kill();
+        OnWorkerErrorOccurred("Worker restarting");
+        
+        if (FindExistingWorker())
+            _workerProcess?.Kill(); // Could be any instance but we want to make sure its spawned by us
+        
+        _workerProcess = null;
+        StartNewWorker();
+    }
+
     private void Application_Exit(object sender, ExitEventArgs e)
     {
         _hasAppExited = true;
 
-        KillProcessAndChildren((int)_workerProcessId);
+        _workerProcess?.Kill();
+        if (FindExistingWorker())
+            _workerProcess?.Kill();
 
         if (_localWorker != null && File.Exists(_localWorker.FilePath))
         {
@@ -226,60 +233,68 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         }
     }
 
-    private void StartWorkerGuardian()
-    {
-        Task.Factory.StartNew(WorkerGuardian);
-    }
-
-    private void WorkerGuardian()
+    private void WorkerWatchdog()
     {
         while (!_hasAppExited)
         {
-            if (_workerWindowPtr == IntPtr.Zero || !WinAPI.IsWindow(_workerWindowPtr))
-            {
-                IsRunning = false;
-            }
-            else
-            {
-                var processId = 1u;
-                WinAPI.GetWindowThreadProcessId(_workerWindowPtr, ref processId);
-                if (processId != _workerProcessId) 
-                    IsRunning = false;
-            }
-
             if (!IsRunning)
             {
                 OnWorkerErrorOccurred("Worker stopped unexpectedly, restarting");
                 StartNewWorker();
+            }
+            else
+            {
+                if (!_workerHidden)
+                    HideWorkerVisuals(); // Worker might need a moment to start, so window handle is not accessible directly
+                
+                CheckForRestartToReloadSettings();
             }
 
             Thread.Sleep(500);
         }
     }
 
-    private void InitializeWorker()
+    private void CheckForRestartToReloadSettings()
     {
-        WinAPI.ShowWindow(_workerWindowPtr, WinAPI.ShowWindowCommands.SW_HIDE);
-        RemoveTrayIcon();
+        if (_settings == null)
+            return;
 
-        _workerProcessId = 1u; // must not be NULL (0)
-        WinAPI.GetWindowThreadProcessId(_workerWindowPtr, ref _workerProcessId);
+        if (!_settings.SettingsAreDirty)
+            return;
+
+        var anyWorking = GetStatus().Any(c => c.State == WorkerCoreState.Working);
+        if (anyWorking)
+            return;
+
+        RestartWorker();
     }
 
     private void OnWorkerStarted()
     {
-        IsRunning = true;
         WorkerRunStateChanged?.Invoke(this, new WorkerRunStateChangedEventArgs(true, null));
     }
 
     private void OnWorkerErrorOccurred(string message)
     {
-        IsRunning = false;
+        _isStartingWorker = false;
         WorkerRunStateChanged?.Invoke(this, new WorkerRunStateChangedEventArgs(false, message));
     }
 
+    private bool FindExistingWorker()
+    {
+        var processes = Process.GetProcessesByName("FBuildWorker.exe");
+        if (processes.Length <= 0)
+            processes = Process.GetProcessesByName("FBuildWorker");
+
+        if (processes.Length <= 0)
+            return false;
+
+        _workerProcess = processes[0];
+        return true;
+    }
     private void StartNewWorker()
     {
+        _isStartingWorker = true;
         var executablePath = WorkerExecutablePath;
 
         if (!File.Exists(executablePath))
@@ -298,14 +313,16 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         var startInfo = new ProcessStartInfo(executablePath)
         {
             Arguments = "-nosubprocess",
-            CreateNoWindow = true
+            CreateNoWindow = false
         };
         startInfo.Arguments += $" -minfreememory={AppSettings.Default.WorkerMinFreeMemoryMiB}";
 
-        Process process;
         try
         {
-            process = Process.Start(startInfo);
+            _workerProcess = new Process{StartInfo = startInfo, EnableRaisingEvents = true};
+            _workerProcess.Exited += WorkerProcessOnExited;
+            _workerProcess.Start();
+            _workerHidden = false;
         }
         catch (Exception ex)
         {
@@ -313,42 +330,23 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
             return;
         }
 
-        while (true)
+        if (_workerProcess == null || _workerProcess.HasExited)
         {
-            if (process == null || process.HasExited)
-            {
-                OnWorkerErrorOccurred("Failed to start worker, worker window not found");
-                return;
-            }
-
-            _workerWindowPtr = FindExistingWorkerWindow();
-            if (_workerWindowPtr != IntPtr.Zero) 
-                break;
-
-            Thread.Sleep(100);
+            OnWorkerErrorOccurred("Failed to start worker, worker window not found");
+            return;
         }
-
-        InitializeWorker();
+        
+        _settings = new WorkerSettings(WorkerExecutablePath);
+        HideWorkerVisuals();
         OnWorkerStarted();
+        _isStartingWorker = false;
     }
 
-
-    private static void KillProcessAndChildren(int pid)
+    private void WorkerProcessOnExited(object sender, EventArgs e)
     {
-        // Cannot close 'system idle process'.
-        if (pid == 0) return;
-        ManagementObjectSearcher searcher = new ManagementObjectSearcher
-            ("Select * From Win32_Process Where ParentProcessID=" + pid);
-        ManagementObjectCollection moc = searcher.Get();
-        foreach (ManagementObject mo in moc) KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
-        try
-        {
-            Process proc = Process.GetProcessById(pid);
-            proc.Kill();
-        }
-        catch (ArgumentException)
-        {
-            // Process already exited.
-        }
+        if (_workerProcess != null)
+            _workerProcess.Exited -= WorkerProcessOnExited;
+        
+        _workerProcess = null;
     }
 }

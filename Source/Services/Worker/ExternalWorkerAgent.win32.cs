@@ -125,6 +125,9 @@ internal partial class ExternalWorkerAgent
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool IsWindow(IntPtr hWnd);
+        
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr OpenProcess(
@@ -209,21 +212,6 @@ internal partial class ExternalWorkerAgent
 
     private static class WinAPIUtils
     {
-        private static int MakeWParam(int loWord, int hiWord)
-        {
-            return (loWord & 0xFFFF) + ((hiWord & 0xFFFF) << 16);
-        }
-
-        public static void SetComboBoxSelectedIndex(IntPtr hWnd, int index)
-        {
-            WinAPI.SendMessage(hWnd, (int)WinAPI.ComboBoxMessages.CB_SETCURSEL, index, IntPtr.Zero);
-
-            var parentHwnd = WinAPI.GetWindowLongPtr(hWnd, (int)WinAPI.GetWindowLongIndexes.GWL_HWNDPARENT);
-            var controlId = WinAPI.GetWindowLongPtr(hWnd, (int)WinAPI.GetWindowLongIndexes.GWL_ID).ToInt32();
-            WinAPI.PostMessage(parentHwnd, (int)WinAPI.WindowsMessages.WM_COMMAND,
-                MakeWParam(controlId, (int)WinAPI.ComboBoxNotifications.CBN_SELCHANGE), hWnd);
-        }
-
         public static string GetWindowText(IntPtr hWnd)
         {
             var textBuffer = new StringBuilder(255);

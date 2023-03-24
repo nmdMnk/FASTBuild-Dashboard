@@ -25,7 +25,7 @@ internal partial class BuildSessionViewModel : Screen
         IsRunning = true;
 
         // ReSharper disable once VirtualMemberCallInConstructor
-        this.DisplayName = startTime.ToString(CultureInfo.CurrentCulture);
+        DisplayName = startTime.ToString(CultureInfo.CurrentCulture);
 
         var brokerageService = IoC.Get<IBrokerageService>();
         PoolWorkerNames = brokerageService.WorkerNames;
@@ -58,10 +58,10 @@ internal partial class BuildSessionViewModel : Screen
             if (value.Equals(_currentTime)) return;
 
             _currentTime = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
 
-            this.NotifyOfPropertyChange(nameof(ElapsedTime));
-            this.NotifyOfPropertyChange(nameof(DisplayElapsedTime));
+            NotifyOfPropertyChange(nameof(ElapsedTime));
+            NotifyOfPropertyChange(nameof(DisplayElapsedTime));
         }
     }
 
@@ -143,7 +143,8 @@ internal partial class BuildSessionViewModel : Screen
         // job finish events
         JobManager.NotifySessionStopped();
 
-        foreach (var worker in Workers) worker.OnSessionStopped(currentTimeOffset);
+        foreach (var worker in Workers) 
+            worker.OnSessionStopped(currentTimeOffset);
 
         InProgressJobCount = 0;
 
@@ -243,7 +244,8 @@ internal partial class BuildSessionViewModel : Screen
 
     public void Tick(DateTime now)
     {
-        if (!IsRunning || IsRestoringHistory) return;
+        if (!IsRunning || IsRestoringHistory)
+            return;
 
         CurrentTime = now;
 
@@ -254,7 +256,8 @@ internal partial class BuildSessionViewModel : Screen
         // called from tick thread
         lock (Workers)
         {
-            foreach (var worker in Workers) worker.Tick(timeOffset);
+            foreach (var worker in Workers)
+                worker.Tick(timeOffset);
         }
 
         Ticked?.Invoke(this, timeOffset);
@@ -268,6 +271,7 @@ internal partial class BuildSessionViewModel : Screen
         // because fbuild will output build state routinely (500ms IIRC), so we won't need to worry
         // about long jobs being mishandled in this situation.
 
-        if ((DateTime.Now - CurrentTime).TotalSeconds > 10) OnStopped(CurrentTime);
+        if ((DateTime.Now - CurrentTime).TotalSeconds > 10)
+            OnStopped(CurrentTime);
     }
 }

@@ -5,11 +5,12 @@ namespace FastBuild.Dashboard.Services.Worker;
 
 internal interface IWorkerAgentService
 {
-    int WorkerCores { get; set; }
-    int WorkerThreshold { get; set; }
-    WorkerMode WorkerMode { get; set; }
-    int MinFreeMemoryMiB { get; set; }
+    uint WorkerCores { get; set; }
+    uint WorkerThreshold { get; set; }
+    WorkerSettings.WorkerModeSetting WorkerMode { get; set; }
+    uint MinFreeMemoryMiB { get; set; }
     bool IsRunning { get; }
+    bool IsPendingRestart { get; }
     event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;
     void Initialize();
     WorkerCoreStatus[] GetStatus();

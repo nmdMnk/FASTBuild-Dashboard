@@ -8,7 +8,7 @@
              mc:Ignorable="d"
              d:DesignHeight="240" d:DesignWidth="300">
 
-    <Grid>
+    <Grid Background="{DynamicResource MaterialDesignPaper}">
         <Grid.ToolTip>
             <StackPanel Margin="4">
                 <StackPanel Orientation="Horizontal">

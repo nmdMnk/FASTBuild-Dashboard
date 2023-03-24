@@ -22,21 +22,22 @@ internal partial class BuildSessionViewModel
         get => _isRestoringHistory;
         set
         {
-            if (value == _isRestoringHistory) return;
+            if (value == _isRestoringHistory) 
+                return;
 
             _isRestoringHistory = value;
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(IsSessionViewVisible));
-            this.NotifyOfPropertyChange(nameof(StatusText));
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(IsSessionViewVisible));
+            NotifyOfPropertyChange(nameof(StatusText));
 
             if (!IsRestoringHistory)
             {
                 // refresh these values after restoring history because they are not updated during the process
                 // in order to increase history restoration performance
-                this.NotifyOfPropertyChange(nameof(SuccessfulJobCount));
-                this.NotifyOfPropertyChange(nameof(CacheHitCount));
-                this.NotifyOfPropertyChange(nameof(InProgressJobCount));
-                this.NotifyOfPropertyChange(nameof(FailedJobCount));
+                NotifyOfPropertyChange(nameof(SuccessfulJobCount));
+                NotifyOfPropertyChange(nameof(CacheHitCount));
+                NotifyOfPropertyChange(nameof(InProgressJobCount));
+                NotifyOfPropertyChange(nameof(FailedJobCount));
 
                 DetectDebris();
             }
@@ -50,11 +51,12 @@ internal partial class BuildSessionViewModel
         get => _isRunning;
         private set
         {
-            if (value == _isRunning) return;
+            if (value == _isRunning) 
+                return;
 
             _isRunning = value;
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(StatusText));
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(StatusText));
         }
     }
 
@@ -63,11 +65,12 @@ internal partial class BuildSessionViewModel
         get => _progress;
         private set
         {
-            if (value.Equals(_progress)) return;
+            if (value.Equals(_progress)) 
+                return;
 
             _progress = value;
-            this.NotifyOfPropertyChange();
-            if (IsRunning) this.NotifyOfPropertyChange(nameof(StatusText));
+            NotifyOfPropertyChange();
+            if (IsRunning) NotifyOfPropertyChange(nameof(StatusText));
         }
     }
 
@@ -75,9 +78,11 @@ internal partial class BuildSessionViewModel
     {
         get
         {
-            if (_isRestoringHistory) return $"Loading ({Progress:0}%)";
+            if (_isRestoringHistory) 
+                return $"Loading ({Progress:0}%)";
 
-            if (IsRunning) return $"Building ({Progress:0}%)";
+            if (IsRunning) 
+                return $"Building ({Progress:0}%)";
 
             return "Finished";
         }
@@ -88,11 +93,12 @@ internal partial class BuildSessionViewModel
         get => _inProgressJobCount;
         private set
         {
-            if (value == _inProgressJobCount) return;
+            if (value == _inProgressJobCount) 
+                return;
 
             _inProgressJobCount = value;
 
-            if (!IsRestoringHistory) this.NotifyOfPropertyChange();
+            if (!IsRestoringHistory) NotifyOfPropertyChange();
         }
     }
 
@@ -101,11 +107,12 @@ internal partial class BuildSessionViewModel
         get => _successfulJobCount;
         private set
         {
-            if (value == _successfulJobCount) return;
+            if (value == _successfulJobCount) 
+                return;
 
             _successfulJobCount = value;
 
-            if (!IsRestoringHistory) this.NotifyOfPropertyChange();
+            if (!IsRestoringHistory) NotifyOfPropertyChange();
         }
     }
 
@@ -114,11 +121,12 @@ internal partial class BuildSessionViewModel
         get => _failedJobCount;
         private set
         {
-            if (value == _failedJobCount) return;
+            if (value == _failedJobCount) 
+                return;
 
             _failedJobCount = value;
 
-            if (!IsRestoringHistory) this.NotifyOfPropertyChange();
+            if (!IsRestoringHistory) NotifyOfPropertyChange();
         }
     }
 
@@ -127,11 +135,12 @@ internal partial class BuildSessionViewModel
         get => _cacheHitCount;
         private set
         {
-            if (value == _cacheHitCount) return;
+            if (value == _cacheHitCount) 
+                return;
 
             _cacheHitCount = value;
 
-            if (!IsRestoringHistory) this.NotifyOfPropertyChange();
+            if (!IsRestoringHistory) NotifyOfPropertyChange();
         }
     }
 
@@ -140,10 +149,11 @@ internal partial class BuildSessionViewModel
         get => _activeWorkerCount;
         private set
         {
-            if (value == _activeWorkerCount) return;
+            if (value == _activeWorkerCount) 
+                return;
 
             _activeWorkerCount = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -152,10 +162,11 @@ internal partial class BuildSessionViewModel
         get => _activeCoreCount;
         private set
         {
-            if (value == _activeCoreCount) return;
+            if (value == _activeCoreCount) 
+                return;
 
             _activeCoreCount = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -167,23 +178,26 @@ internal partial class BuildSessionViewModel
         private set
         {
             _poolWorkerNames = value;
-            this.NotifyOfPropertyChange();
-            this.NotifyOfPropertyChange(nameof(PoolWorkerCount));
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(PoolWorkerCount));
         }
     }
 
     private void UpdateActiveWorkerAndCoreCount()
     {
-        if (IsRestoringHistory) return;
+        if (IsRestoringHistory) 
+            return;
 
         var activeWorkerCount = 0;
         var activeCoreCount = 0;
         foreach (var worker in Workers)
+        {
             if (worker.ActiveCoreCount > 0)
             {
                 ++activeWorkerCount;
                 activeCoreCount += worker.ActiveCoreCount;
             }
+        }
 
         ActiveWorkerCount = activeWorkerCount;
         ActiveCoreCount = activeCoreCount;

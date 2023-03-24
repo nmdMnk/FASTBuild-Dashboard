@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using Caliburn.Micro;
 using FastBuild.Dashboard.Services.Worker;
@@ -47,7 +48,7 @@ internal class WorkerCoreStatusViewModel : PropertyChangedBase
                     return Brushes.Gray;
                 case WorkerCoreState.Idle:
                 case WorkerCoreState.Working:
-                    return Brushes.ForestGreen;
+                    return (SolidColorBrush)Application.Current.FindResource("JobBorderBrush_Building");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -64,7 +65,7 @@ internal class WorkerCoreStatusViewModel : PropertyChangedBase
                 case WorkerCoreState.Idle:
                     return Brushes.Transparent;
                 case WorkerCoreState.Working:
-                    return Brushes.ForestGreen;
+                    return (SolidColorBrush)Application.Current.FindResource("JobBorderBrush_Building");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -80,9 +81,9 @@ internal class WorkerCoreStatusViewModel : PropertyChangedBase
                 case WorkerCoreState.Disabled:
                     return Brushes.Gray;
                 case WorkerCoreState.Idle:
-                    return Brushes.ForestGreen;
+                    return (SolidColorBrush)Application.Current.FindResource("JobBackgroundBrush_Success");
                 case WorkerCoreState.Working:
-                    return Brushes.White;
+                    return (SolidColorBrush)Application.Current.FindResource("JobBackgroundBrush_Building");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -94,16 +95,17 @@ internal class WorkerCoreStatusViewModel : PropertyChangedBase
         try
         {
             _status = status;
-            this.NotifyOfPropertyChange(nameof(HostHelping));
-            this.NotifyOfPropertyChange(nameof(WorkingItem));
-            this.NotifyOfPropertyChange(nameof(UIBulbBorderColor));
-            this.NotifyOfPropertyChange(nameof(UIBulbFillColor));
-            this.NotifyOfPropertyChange(nameof(UIBulbForeground));
-            this.NotifyOfPropertyChange(nameof(IsWorking));
-            this.NotifyOfPropertyChange(nameof(DisplayState));
+            NotifyOfPropertyChange(nameof(HostHelping));
+            NotifyOfPropertyChange(nameof(WorkingItem));
+            NotifyOfPropertyChange(nameof(UIBulbBorderColor));
+            NotifyOfPropertyChange(nameof(UIBulbFillColor));
+            NotifyOfPropertyChange(nameof(UIBulbForeground));
+            NotifyOfPropertyChange(nameof(IsWorking));
+            NotifyOfPropertyChange(nameof(DisplayState));
         }
-        catch
+        catch (Exception)
         {
+            // ignored
         }
     }
 }

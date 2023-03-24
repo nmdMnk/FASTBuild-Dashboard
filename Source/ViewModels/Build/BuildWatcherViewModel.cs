@@ -16,7 +16,7 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
 
     public BuildWatcherViewModel()
     {
-        this.DisplayName = "Build";
+        DisplayName = "Build";
 
         _watcher = new BuildWatcher();
         _watcher.HistoryRestorationStarted += Watcher_HistoryRestorationStarted;
@@ -39,10 +39,11 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
         get => _currentSession;
         private set
         {
-            if (Equals(value, _currentSession)) return;
+            if (Equals(value, _currentSession)) 
+                return;
 
             _currentSession = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -51,10 +52,11 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
         get => _taskbarProgressState;
         private set
         {
-            if (value == _taskbarProgressState) return;
+            if (value == _taskbarProgressState) 
+                return;
 
             _taskbarProgressState = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -63,10 +65,11 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
         get => _taskbarProgressValue;
         private set
         {
-            if (value.Equals(_taskbarProgressValue)) return;
+            if (value.Equals(_taskbarProgressValue)) 
+                return;
 
             _taskbarProgressValue = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -77,7 +80,8 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
     private void TickTimer_Elapsed(object sender, ElapsedEventArgs e)
     {
         // ReSharper disable once UseNullPropagation
-        if (CurrentSession == null) return;
+        if (CurrentSession == null) 
+            return;
 
         // note we only need to tick current session
 
@@ -87,17 +91,20 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
 
     private void Watcher_HistoryRestorationEnded(object sender, EventArgs e)
     {
-        if (CurrentSession != null) CurrentSession.IsRestoringHistory = false;
+        if (CurrentSession != null) 
+            CurrentSession.IsRestoringHistory = false;
     }
 
     private void Watcher_HistoryRestorationStarted(object sender, EventArgs e)
     {
-        if (CurrentSession != null) CurrentSession.IsRestoringHistory = true;
+        if (CurrentSession != null) 
+            CurrentSession.IsRestoringHistory = true;
     }
 
     private void EnsureCurrentSession()
     {
-        if (CurrentSession != null) return;
+        if (CurrentSession != null) 
+            return;
 
         CurrentSession = new BuildSessionViewModel
         {
@@ -105,9 +112,9 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
         };
 
         // called from log watcher thread
-        lock (this.Items)
+        lock (Items)
         {
-            this.Items.Add(CurrentSession);
+            Items.Add(CurrentSession);
         }
     }
 
@@ -120,8 +127,8 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
             IsRestoringHistory = _watcher.IsRestoringHistory
         };
 
-        this.Items.Add(CurrentSession);
-        this.ActivateItemAsync(CurrentSession);
+        Items.Add(CurrentSession);
+        ActivateItemAsync(CurrentSession);
 
         TaskbarProgressState = TaskbarItemProgressState.Indeterminate;
         WorkingStateChanged?.Invoke(this, true);

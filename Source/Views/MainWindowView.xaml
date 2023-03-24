@@ -42,10 +42,21 @@
 
         <materialDesign:DrawerHost.LeftDrawerContent>
             <DockPanel MinWidth="212">
-                <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}"
-                              DockPanel.Dock="Top"
-                              HorizontalAlignment="Right" Margin="16"
-                              IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
+                <Grid 
+                    DockPanel.Dock="Top">
+                    <Image Source="../Resources/Icons/app.ico" 
+                           MaxWidth="48"
+                           DockPanel.Dock="Top"
+                           HorizontalAlignment="Left"
+                           Margin="16"
+                    />
+                    <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                  DockPanel.Dock="Top"
+                                  HorizontalAlignment="Right" Margin="16"
+                                  MaxWidth="32"
+                                  MaxHeight="32"
+                                  IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />    
+                </Grid>
                 <ListBox ItemsSource="{Binding Items}"
                          SelectedItem="{Binding CurrentPage}"
                          SelectionChanged="ListBox_SelectionChanged"
@@ -63,14 +74,16 @@
         </materialDesign:DrawerHost.LeftDrawerContent>
 
         <Grid>
-            <materialDesign:ColorZone Padding="16"
+            <materialDesign:ColorZone Padding="16 8 16 8"
                                       Height="{StaticResource TitleColorZoneHeight}"
-                                      materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                      materialDesign:ElevationAssist.Elevation="Dp16"
                                       VerticalAlignment="Top"
-                                      Mode="PrimaryDark">
+                                      Mode="PrimaryDark"
+                                      Background="#B0711B">
                 <Grid>
                     <ToggleButton x:Name="MenuToggleButton"
                                   Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                  MaxWidth="32"
                                   HorizontalAlignment="Left"
                                   IsChecked="False" />
                 </Grid>

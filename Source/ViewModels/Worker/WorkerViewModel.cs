@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Timers;
 using Caliburn.Micro;
 using FastBuild.Dashboard.Services.Worker;
@@ -36,10 +37,11 @@ internal class WorkerViewModel : PropertyChangedBase, IMainPage
         get => _workerErrorMessage;
         private set
         {
-            if (value == _workerErrorMessage) return;
+            if (value == _workerErrorMessage) 
+                return;
 
             _workerErrorMessage = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -48,10 +50,11 @@ internal class WorkerViewModel : PropertyChangedBase, IMainPage
         get => _statusTitle;
         private set
         {
-            if (value == _statusTitle) return;
+            if (value == _statusTitle) 
+                return;
 
             _statusTitle = value;
-            this.NotifyOfPropertyChange();
+            NotifyOfPropertyChange();
         }
     }
 
@@ -71,34 +74,42 @@ internal class WorkerViewModel : PropertyChangedBase, IMainPage
             return;
 
         _isTicking = true;
+        NotifyOfPropertyChange(nameof(IsWorkerRunning));
 
-        var statuses = _workerAgentService.GetStatus();
+        try
+        {
+            var statuses = _workerAgentService.GetStatus();
 
-        for (var i = CoreStatuses.Count - 1; i > statuses.Length; --i) 
-            CoreStatuses.RemoveAt(i);
+            for (var i = CoreStatuses.Count - 1; i > statuses.Length; --i) 
+                CoreStatuses.RemoveAt(i);
 
-        for (var i = CoreStatuses.Count; i < statuses.Length; ++i) 
-            CoreStatuses.Add(new WorkerCoreStatusViewModel(i));
+            for (var i = CoreStatuses.Count; i < statuses.Length; ++i) 
+                CoreStatuses.Add(new WorkerCoreStatusViewModel(i));
 
-        for (var i = 0; i < CoreStatuses.Count; ++i) 
-            CoreStatuses[i].UpdateStatus(statuses[i]);
+            for (var i = 0; i < CoreStatuses.Count; ++i) 
+                CoreStatuses[i].UpdateStatus(statuses[i]);
 
-        if (statuses.All(s => s.State == WorkerCoreState.Disabled))
-            StatusTitle = "Disabled";
-        else if (statuses.Any(s => s.State == WorkerCoreState.Working))
-            StatusTitle = "Working";
-        else
-            StatusTitle = "Idle";
+            if (statuses.All(s => s.State == WorkerCoreState.Disabled))
+                StatusTitle = "Disabled";
+            else if (statuses.Any(s => s.State == WorkerCoreState.Working))
+                StatusTitle = "Working";
+            else
+                StatusTitle = "Idle";
+        }
+        catch (Exception)
+        {
+            // ignored. 
+        }
 
         _isTicking = false;
     }
 
     private void WorkerAgentService_WorkerRunStateChanged(object sender, WorkerRunStateChangedEventArgs e)
     {
-        this.NotifyOfPropertyChange(nameof(IsWorkerRunning));
+        NotifyOfPropertyChange(nameof(IsWorkerRunning));
         WorkerErrorMessage = e.ErrorMessage;
 
         if (!e.IsRunning) 
-            StatusTitle = "Worker Error";
+            StatusTitle = "Worker is not running!";
     }
 }

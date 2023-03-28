@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -282,13 +283,14 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
 
     private bool FindExistingWorker()
     {
-        var processes = Process.GetProcessesByName("FBuildWorker.exe");
-        if (processes.Length <= 0)
-            processes = Process.GetProcessesByName("FBuildWorker");
+        List<Process> processes = Process.GetProcessesByName("FBuildWorker.exe").ToList();
+        processes.AddRange(Process.GetProcessesByName("FBuildWorker"));
+        processes.AddRange(Process.GetProcessesByName("FBuildWorker.exe.copy"));
 
-        if (processes.Length <= 0)
+        if (processes.Count <= 0)
             return false;
 
+        // There can be only one FBuildWorker anyways, so there never should be more than one
         _workerProcess = processes[0];
         return true;
     }
@@ -312,8 +314,7 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
 
         var startInfo = new ProcessStartInfo(executablePath)
         {
-            Arguments = "-nosubprocess",
-            CreateNoWindow = false
+            Arguments = "-nosubprocess"
         };
         startInfo.Arguments += $" -minfreememory={AppSettings.Default.WorkerMinFreeMemoryMiB}";
 

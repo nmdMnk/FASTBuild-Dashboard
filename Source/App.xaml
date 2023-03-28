@@ -13,10 +13,8 @@
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
 
-                <!--<ResourceDictionary Source="themes/WindowStyle.xaml" />-->
                 <ResourceDictionary Source="themes/Layout.xaml" />
                 <ResourceDictionary Source="themes/BuildJob.xaml" />
-                <!--<ResourceDictionary Source="themes/Default.xaml" />-->
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.dark.xaml" />
                 <ResourceDictionary

@@ -1,5 +1,5 @@
 # FASTBuild Dashboard - Nine Worlds Studios Edition
-This is an updated version of the forked FASTBuild Dashboard. The intention is to enhance it with new features and fixes. It is expected that the related fork of [FASTBuild](https://github.com/NineWorldsStudios/FASTBuild) is used for compiling C++ and shaders for Unreal Engine 5.0+.
+This is an updated version of the forked FASTBuild Dashboard. The intention is to enhance it with new features and fixes. It is expected that the related fork of [FASTBuild](https://github.com/NineWorldsStudios/FASTBuild) is used for compiling C++ and shaders for Unreal Engine 5.0+. The FBuildDashboard starts/restarts/stops the FBuildWorker and acts as a visual wrapper.
 
 We are actively using the Dashboard and FASTBuild for Unreal based projects and we plan to continue working on this to work with Unreal Engine 5. 
 
@@ -13,6 +13,8 @@ __New Improvements__
 - Close button sends dashboard to tray (force close only possible via right click)
 - Some UX improvements
 - Removed start with windows (done via installer)
+- Settings of FBuildWorker are now used + auto restart on setting change
+- Minimum Free Memory commandline arg is exposed in settings
 - Bugfixes
 
 ![Screenshot of FBD 1.1.0](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/blob/master/Documentations/Screenshots/FASTBuild-Dashboard.1.1.0.png?raw=true)

@@ -3,11 +3,13 @@ using System.Linq;
 using System.Timers;
 using Caliburn.Micro;
 using FastBuild.Dashboard.Services.Worker;
+using NLog;
 
 namespace FastBuild.Dashboard.ViewModels.Worker;
 
 internal class WorkerViewModel : PropertyChangedBase, IMainPage
 {
+    private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     private readonly IWorkerAgentService _workerAgentService;
 
     private bool _isTicking;
@@ -16,6 +18,7 @@ internal class WorkerViewModel : PropertyChangedBase, IMainPage
 
     public WorkerViewModel()
     {
+        Logger.Info("Preparing worker");
         StatusTitle = "Preparing...";
 
         _workerAgentService = IoC.Get<IWorkerAgentService>();

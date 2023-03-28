@@ -5,12 +5,14 @@ namespace FastBuild.Dashboard.Services.Worker;
 
 internal class WorkerAgentService : IWorkerAgentService
 {
+    private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     private readonly IWorkerAgent _workerAgent;
 
     public WorkerAgentService()
     {
         _workerAgent = new ExternalWorkerAgent();
         _workerAgent.WorkerRunStateChanged += WorkerAgent_WorkerRunStateChanged;
+        Logger.Info("Created");
     }
 
     public uint WorkerCores
@@ -51,6 +53,7 @@ internal class WorkerAgentService : IWorkerAgentService
 
     public void Initialize()
     {
+        Logger.Info("Initialize");
         _workerAgent.Initialize();
     }
 

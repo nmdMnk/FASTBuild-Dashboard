@@ -31,7 +31,8 @@ public partial class MainWindowView
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (App.Current.StartMinimized) Hide();
+        if (App.Current.StartMinimized) 
+            Hide();
     }
 
     protected override void OnClosing(CancelEventArgs e)
@@ -39,7 +40,6 @@ public partial class MainWindowView
         if (_isClosingFromXButton)
         {
             e.Cancel = true;
-
             Hide();
         }
 

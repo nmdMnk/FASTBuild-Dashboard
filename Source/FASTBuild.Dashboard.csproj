@@ -332,6 +332,9 @@
             <LastGenOutput>Resources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
         <None Include="app.config" />
+        <None Include="NLog.config">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Include="Properties\Settings.settings">
             <Generator>SettingsSingleFileGenerator</Generator>
             <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -386,6 +389,8 @@
         <PackageReference Include="ModernWpfUI" Version="0.9.6" />
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="NLog" Version="5.1.2" />
+        <PackageReference Include="NLog.Schema" Version="5.1.2" />
         <PackageReference Include="Ookii.Dialogs" Version="5.0.1" />
         <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
         <PackageReference Include="System.AppContext" Version="4.3.0" />

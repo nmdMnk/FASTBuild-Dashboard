@@ -18,6 +18,14 @@ __New Improvements__
 ![Screenshot of FBD 1.1.0](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/blob/master/Documentations/Screenshots/FASTBuild-Dashboard.1.1.0.png?raw=true)
 
 ## Changelog 
+### 1.1.1.109
+Fixes
+- Fixed an issue that worker tray icon wasn't hidden
+- Fixed exe.copy worker not being recognized for closing non-dashboard started workers
+- Worker .settings file will now be auto created if none exists, e.g. on fresh install
+- Fixed settings readWriteLock not being released when settings didn't exist or version is not matching
+- Removed test xaml file
+
 ### 1.1.0.108
 Changes
 - Changed way how worker settings are applied: Instead of setting the dropdown values of the worker window, the .settings file is used instead & the worker is auto restarted when idle to apply settings. This way it should be more reliable and consistent.

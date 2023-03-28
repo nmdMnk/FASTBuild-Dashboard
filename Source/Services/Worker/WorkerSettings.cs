@@ -91,9 +91,13 @@ public class WorkerSettings
             return;
 
         _readWriteLock = true;
-        
+
         if (!File.Exists(SettingsPath))
+        {
+            _readWriteLock = false;
+            CreateDefaults();
             return;
+        }
 
         byte[] bytesRead = File.ReadAllBytes(SettingsPath);
         int offset = 0;
@@ -103,6 +107,7 @@ public class WorkerSettings
         if (settingsVersion < FbuildworkerSettingsMinVersion ||
             settingsVersion > FbuildworkerSettingsCurrentVersion)
         {
+            _readWriteLock = false;
             return; // Too old or new
         }
 
@@ -128,6 +133,14 @@ public class WorkerSettings
         _settingsAreDirty = false;
 
         _readWriteLock = false;
+    }
+
+    private void CreateDefaults()
+    {
+        _workerMode = WorkerModeSetting.WorkProportional;
+        _idleThresholdPercent = 50;
+        _numCpUsToUse = (uint)Environment.ProcessorCount;
+        Save();
     }
 
     public void Save()

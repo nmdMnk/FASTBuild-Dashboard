@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Threading;
 using Caliburn.Micro;
 using FastBuild.Dashboard.Services;
 using FastBuild.Dashboard.Services.Build;
@@ -73,7 +74,8 @@ internal class AppBootstrapper : BootstrapperBase
         if (App.Current.DoNotSpawnShadowExecutable || App.Current.IsShadowProcess)
         {
             Logger.Info($"Display Main Window");
-            DisplayRootViewForAsync<MainWindowViewModel>();
+            var displayTask = DisplayRootViewForAsync<MainWindowViewModel>();
+            displayTask.Wait();
         }
         else
         {
@@ -155,9 +157,14 @@ internal class AppBootstrapper : BootstrapperBase
             Arguments = string.Join(" ", e.Args.Concat(new[] { AppArguments.ShadowProc }))
         });
     }
+    protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        Logger.Error($"Caught unhandled exception: {e.Exception}");
+    }
 
     protected override void OnExit(object sender, EventArgs e)
     {
+        Logger.Info("Exiting...");
         SingleInstance<App>.Cleanup();
         base.OnExit(sender, e);
     }

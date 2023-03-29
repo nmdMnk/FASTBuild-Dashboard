@@ -20,7 +20,8 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    private const string WorkerExecutablePath = @"FBuild\FBuildWorker.exe";
+    private readonly string _workerExecutablePath = 
+        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "FBuild", "FBuildWorker.exe");
 
     private bool _hasAppExited;
 
@@ -32,7 +33,7 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
     public ExternalWorkerAgent()
     {
         Application.Current.Exit += Application_Exit;
-        _settings = new WorkerSettings(WorkerExecutablePath);
+        _settings = new WorkerSettings(_workerExecutablePath);
         Logger.Info("Created");
     }
 
@@ -226,7 +227,17 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         OnWorkerErrorOccurred("Worker restarting");
 
         if (FindExistingWorker())
-            _workerProcess?.Kill(); // Could be any instance but we want to make sure its spawned by us
+        {
+            Logger.Info("Killing existing worker process.");
+            try
+            {
+                _workerProcess?.Kill(); // Could be any instance but we want to make sure its spawned by us
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
 
         _workerProcess = null;
         StartNewWorker();
@@ -322,17 +333,17 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         Logger.Info("Trying to start new worker");
 
         _isStartingWorker = true;
-        var executablePath = WorkerExecutablePath;
+        var executablePath = _workerExecutablePath;
 
         if (!File.Exists(executablePath))
         {
             // If worker isn't found in working directory, try it relative to running binary.
             executablePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
-                WorkerExecutablePath);
+                _workerExecutablePath);
 
             if (!File.Exists(executablePath))
             {
-                OnWorkerErrorOccurred($"Worker executable not found at {WorkerExecutablePath}");
+                OnWorkerErrorOccurred($"Worker executable not found at {_workerExecutablePath}");
                 return;
             }
         }
@@ -362,7 +373,7 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
             return;
         }
 
-        _settings = new WorkerSettings(WorkerExecutablePath);
+        _settings = new WorkerSettings(_workerExecutablePath);
         HideWorkerVisuals();
         OnWorkerStarted();
         _isStartingWorker = false;

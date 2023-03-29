@@ -97,6 +97,7 @@ public class WorkerSettings
 
         if (!File.Exists(SettingsPath))
         {
+            Logger.Warn($"Unable to find settings at {SettingsPath}!");
             _readWriteLock = false;
             CreateDefaults();
             return;
@@ -156,7 +157,7 @@ public class WorkerSettings
         if (_readWriteLock)
             return;
         
-        Logger.Info("Saving worker settings...");
+        Logger.Info($"Saving worker settings to {SettingsPath}...");
 
         _readWriteLock = true;
         List<byte> bytes = new List<byte>();

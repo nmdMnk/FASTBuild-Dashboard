@@ -8,6 +8,7 @@ __New Features__
 - Broker Agents View
 - Change UI to Dark Mode!
 - Exposed mininum free memory setting to UI (worker/dashboard restart required!)
+- Added logging to rotating text files
 
 __New Improvements__
 - Close button sends dashboard to tray (force close only possible via right click)
@@ -20,6 +21,14 @@ __New Improvements__
 ![Screenshot of FBD 1.1.0](https://github.com/NineWorldsStudios/FASTBuild-Dashboard/blob/master/Documentations/Screenshots/FASTBuild-Dashboard.1.1.0.png?raw=true)
 
 ## Changelog 
+### 1.1.2.110
+New
+- Added NLog nuget package + plenty of logs to better see what happens. Logs can be found in logs folder.
+
+Fixes
+- Fixed worker not being started on OS startup
+- Fixed restarting of worker sometimes failing (e.g. on settings update)
+
 ### 1.1.1.109
 Fixes
 - Fixed an issue that worker tray icon wasn't hidden

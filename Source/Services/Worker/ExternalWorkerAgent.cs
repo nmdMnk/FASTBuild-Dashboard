@@ -102,7 +102,7 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
             WinAPI.MAX_LVMSTRING,
             WinAPI.AllocationType.Commit,
             WinAPI.MemoryProtection.ReadWrite);
-
+        
         var lvItem = new WinAPI.LVITEM
         {
             mask = (uint)WinAPI.ListViewItemFilters.LVIF_TEXT,
@@ -352,7 +352,8 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         {
             Arguments = "-nosubprocess"
         };
-        startInfo.Arguments += $" -minfreememory={AppSettings.Default.WorkerMinFreeMemoryMiB}";
+        //jmn - Argument not supported in Unreal's 4 version.
+        //startInfo.Arguments += $" -minfreememory={AppSettings.Default.WorkerMinFreeMemoryMiB}";
 
         try
         {

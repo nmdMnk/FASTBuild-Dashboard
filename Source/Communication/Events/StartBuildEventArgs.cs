@@ -1,4 +1,5 @@
-﻿namespace FastBuild.Dashboard.Communication.Events;
+﻿using System;
+namespace FastBuild.Dashboard.Communication.Events;
 
 internal class StartBuildEventArgs : BuildEventArgs
 {
@@ -10,9 +11,24 @@ internal class StartBuildEventArgs : BuildEventArgs
     public static StartBuildEventArgs Parse(string[] tokens)
     {
         var args = new StartBuildEventArgs();
-        ParseBase(tokens, args);
-        args.LogVersion = int.Parse(tokens[EventArgStartIndex]);
-        args.ProcessId = int.Parse(tokens[EventArgStartIndex + 1]);
+        if (tokens.Length > 0)
+        {
+            ParseBase(tokens, args);
+            //args.LogVersion = int.Parse(tokens[EventArgStartIndex]);
+            
+            if (int.TryParse(tokens[3], out int parsed))
+            {
+                args.ProcessId = parsed;
+            }
+            else if (long.TryParse(tokens[0], out long parsedlong))
+            {
+                args.ProcessId = (int)parsedlong;
+            }
+            else
+            {
+                args.ProcessId = 0;
+            }
+        }
         return args;
     }
 }

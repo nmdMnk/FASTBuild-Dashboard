@@ -11,21 +11,27 @@ internal class StartBuildEventArgs : BuildEventArgs
     public static StartBuildEventArgs Parse(string[] tokens)
     {
         var args = new StartBuildEventArgs();
+        
+        //need to be defensive here
         if (tokens.Length > 0)
         {
             ParseBase(tokens, args);
-            //args.LogVersion = int.Parse(tokens[EventArgStartIndex]);
+            if (int.TryParse(tokens[EventArgStartIndex], out int logVersion))
+            {
+                args.LogVersion = logVersion;
+            }
             
-            if (int.TryParse(tokens[3], out int parsed))
+            if (int.TryParse(tokens[EventArgStartIndex + 1], out int parsed))
             {
                 args.ProcessId = parsed;
             }
-            else if (long.TryParse(tokens[0], out long parsedlong))
+            else if (long.TryParse(tokens[0], out long processId))
             {
-                args.ProcessId = (int)parsedlong;
+                args.ProcessId = (int)processId;
             }
             else
             {
+                //not ideal but gets things going
                 args.ProcessId = 0;
             }
         }

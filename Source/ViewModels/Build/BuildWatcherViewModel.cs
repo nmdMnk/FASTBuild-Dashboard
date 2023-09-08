@@ -13,9 +13,6 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
     private BuildSessionViewModel _currentSession;
     private TaskbarItemProgressState _taskbarProgressState;
     private double _taskbarProgressValue;
-    private int _jobProgressCounter = 0;
-    private int _jobProgressCompletedCounter = 0;
-    private bool _sessionRunning = false;
     
     public BuildWatcherViewModel()
     {
@@ -123,7 +120,6 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
 
     private void Watcher_SessionStarted(object sender, StartBuildEventArgs e)
     {
-        _sessionRunning = true;
         CurrentSession?.OnStopped(DateTime.Now);
 
         CurrentSession = new BuildSessionViewModel(e)
@@ -140,7 +136,6 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
 
     private void Watcher_SessionStopped(object sender, StopBuildEventArgs e)
     {
-        _sessionRunning = false;
         CurrentSession?.OnStopped(e);
         TaskbarProgressState = TaskbarItemProgressState.None;
         WorkingStateChanged?.Invoke(this, false);
@@ -164,13 +159,11 @@ internal sealed class BuildWatcherViewModel : Conductor<BuildSessionViewModel>.C
     {
         EnsureCurrentSession();
         CurrentSession.OnJobFinished(e);
-        _jobProgressCounter--;
     }
 
     private void Watcher_JobStarted(object sender, StartJobEventArgs e)
     {
         EnsureCurrentSession();
         CurrentSession.OnJobStarted(e);
-        _jobProgressCounter++;
     }
 }

@@ -39,13 +39,11 @@ internal partial class BuildSessionViewModel : Screen
     public BuildSessionViewModel()
         : this(DateTime.Now, null, null)
     {
-        IsRunning = true;
     }
 
     public BuildSessionViewModel(StartBuildEventArgs e)
         : this(e.Time, e.ProcessId, e.LogVersion)
     {
-        IsRunning = true;
     }
 
     public DateTime StartTime { get; }
@@ -110,7 +108,7 @@ internal partial class BuildSessionViewModel : Screen
 
         void TimerTick(object sender, ElapsedEventArgs e)
         {
-            if (_fbuildProcess != null && _fbuildProcess.HasExited)
+            if (_fbuildProcess.HasExited)
             {
                 _fbuildProcess = null;
                 OnStopped(DateTime.Now);

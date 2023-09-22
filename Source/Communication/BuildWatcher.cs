@@ -121,6 +121,7 @@ internal class BuildWatcher
                         SessionStarted?.Invoke(this, ReceiveEvent<StartBuildEventArgs>(tokens));
                         _IsSessionRuning = true;
                     }
+
                     JobStarted?.Invoke(this, ReceiveEvent<StartJobEventArgs>(tokens));
                     break;
                 case FinishJobEventArgs.FinishJobEventName:

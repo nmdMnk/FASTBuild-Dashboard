@@ -108,7 +108,7 @@ internal partial class BuildSessionViewModel : Screen
 
         void TimerTick(object sender, ElapsedEventArgs e)
         {
-            if (_fbuildProcess.HasExited)
+            if (_fbuildProcess != null && _fbuildProcess.HasExited)
             {
                 _fbuildProcess = null;
                 OnStopped(DateTime.Now);

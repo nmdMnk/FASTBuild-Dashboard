@@ -352,8 +352,8 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         {
             Arguments = "-nosubprocess"
         };
-        //jmn - Argument not supported in Unreal's 4 version.
-        //startInfo.Arguments += $" -minfreememory={AppSettings.Default.WorkerMinFreeMemoryMiB}";
+        
+        startInfo.Arguments += $" -minfreememory={AppSettings.Default.WorkerMinFreeMemoryMiB}";
 
         try
         {

@@ -9,6 +9,7 @@ namespace FastBuild.Dashboard.Communication;
 internal class BuildWatcher
 {
     private readonly LogWatcher _logWatcher;
+    private bool _isSessionRuning = false;
 
     public BuildWatcher()
     {
@@ -112,6 +113,11 @@ internal class BuildWatcher
                     SessionStopped?.Invoke(this, ReceiveEvent<StopBuildEventArgs>(tokens));
                     break;
                 case StartJobEventArgs.StartJobEventName:
+                    if (!_isSessionRuning)
+                    {
+                        SessionStarted?.Invoke(this, ReceiveEvent<StartBuildEventArgs>(tokens));
+                        _isSessionRuning = true;
+                    }
                     JobStarted?.Invoke(this, ReceiveEvent<StartJobEventArgs>(tokens));
                     break;
                 case FinishJobEventArgs.FinishJobEventName:

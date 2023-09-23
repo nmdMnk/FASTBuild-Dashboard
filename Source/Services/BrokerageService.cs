@@ -16,7 +16,7 @@ public class WorkerListChangedEventArgs : EventArgs
 
 internal class BrokerageService : IBrokerageService
 {
-    private const string WorkerPoolRelativePath = @"main\20.windows";
+    private const string WorkerPoolRelativePath = @"main\22.windows";
 
     private bool _isUpdatingWorkers;
 

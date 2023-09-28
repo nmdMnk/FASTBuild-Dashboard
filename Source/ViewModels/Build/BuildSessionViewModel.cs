@@ -39,11 +39,13 @@ internal partial class BuildSessionViewModel : Screen
     public BuildSessionViewModel()
         : this(DateTime.Now, null, null)
     {
+        IsRunning = true;
     }
 
     public BuildSessionViewModel(StartBuildEventArgs e)
         : this(e.Time, e.ProcessId, e.LogVersion)
     {
+        IsRunning = true;
     }
 
     public DateTime StartTime { get; }

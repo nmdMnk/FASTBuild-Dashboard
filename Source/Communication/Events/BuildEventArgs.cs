@@ -12,7 +12,14 @@ internal abstract class BuildEventArgs : EventArgs
 
     protected static DateTime ParseTime(string timeStamp)
     {
-        return DateTime.FromFileTime(long.Parse(timeStamp));
+        if (long.TryParse(timeStamp, out long parsedTimestamp))
+        {
+            return DateTime.FromFileTime(parsedTimestamp);
+        }
+        else
+        {
+            return DateTime.Now;
+        }
     }
 
     protected static void ParseBase(string[] tokens, BuildEventArgs args)

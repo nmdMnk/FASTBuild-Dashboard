@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using FastBuild.Dashboard.Configuration;
 using FastBuild.Dashboard.Support;
+using Microsoft.Win32;
 
 namespace FastBuild.Dashboard;
 
@@ -30,6 +33,31 @@ public partial class App : ISingleInstanceApp
         Application.Current.MainWindow.Show();
         Application.Current.MainWindow.Activate();
         return true;
+    }
+    
+    public bool SetStartupWithWindows(bool startUp)
+    {
+        var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        var entryAssembly = Assembly.GetEntryAssembly();
+        if (key != null && !string.IsNullOrEmpty(entryAssembly.Location))
+        {
+            if (startUp)
+            {
+                var location = entryAssembly.Location;
+                if (this.ShadowContext != null && !string.IsNullOrEmpty(this.ShadowContext.OriginalLocation))
+                {
+                    location = this.ShadowContext.OriginalLocation;
+                }
+                Debug.Assert(location != null, "location != null");
+                key.SetValue(entryAssembly.GetName().Name, $"\"{location}\" -minimized");
+            }
+            else
+            {
+                key.DeleteValue(entryAssembly.GetName().Name, false);
+            }
+            return true;
+        }
+        return false;
     }
 
     protected override void OnStartup(StartupEventArgs e)

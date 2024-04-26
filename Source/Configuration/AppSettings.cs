@@ -9,7 +9,7 @@ public class AppSettings : SettingsBase
 
     public override string Domain => AppSettingsDomain;
     public uint WorkerMinFreeMemoryMiB { get; set; } = 4096;
-
+    public bool StartWithWindows { get; set; } = true;
     public string ExternalSourceEditorPath { get; set; }
     public string ExternalSourceEditorArgs { get; set; }
     public string ExternalSourceEditorAdditionalArgs { get; set; }

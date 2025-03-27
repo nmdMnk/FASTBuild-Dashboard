@@ -213,7 +213,8 @@ internal partial class BuildSessionViewModel : Screen
                 break;
         }
 
-        --InProgressJobCount;
+        if (InProgressJobCount > 0)
+            --InProgressJobCount;
 
         UpdateActiveWorkerAndCoreCount();
     }

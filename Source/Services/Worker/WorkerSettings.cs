@@ -156,7 +156,12 @@ public class WorkerSettings
     {
         if (_readWriteLock)
             return;
-        
+
+        if (!Directory.Exists(Path.GetDirectoryName(SettingsPath)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
+        }
+
         Logger.Info($"Saving worker settings to {SettingsPath}...");
 
         _readWriteLock = true;

@@ -152,6 +152,18 @@ internal sealed partial class SettingsViewModel : ValidatingScreen<SettingsViewM
     }
     public string DisplayMinFreeMemoryMiB => $"{WorkerMinFreeMemoryMiB} MiB";
 
+    public bool PreferHostname
+    {
+        get => IoC.Get<IWorkerAgentService>().PreferHostname;
+        set
+        {
+            IoC.Get<IWorkerAgentService>().PreferHostname = value;
+            //AppSettings.Default.Save();
+            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(WorkerStatusText));
+        }
+    }
+
     public uint MaximumCores { get; }
     public DoubleCollection CoreTicks { get; }
 

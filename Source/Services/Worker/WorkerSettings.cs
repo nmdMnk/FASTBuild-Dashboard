@@ -70,6 +70,17 @@ public class WorkerSettings
         }
     }
 
+    public bool PreferHostname // Not stored in worker settings but in dashboard settings
+    {
+        get => AppSettings.Default.PreferHostname;
+        set
+        {
+            AppSettings.Default.PreferHostname = value;
+            AppSettings.Default.Save();
+            _settingsAreDirty = true;
+        }
+    }
+
     public bool SettingsAreDirty => _settingsAreDirty;
 
     private string SettingsPath => _workerExePath + ".settings";

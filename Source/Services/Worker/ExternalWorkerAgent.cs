@@ -218,6 +218,11 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         _settings.MinimumFreeMemoryMiB = memory;
         _settings.Save();
     }
+    public void SetPreferHostname(bool preferHostname)
+    {
+        _settings.PreferHostname = preferHostname;
+        _settings.Save();
+    }
 
     public void RestartWorker()
     {
@@ -352,7 +357,10 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         {
             Arguments = "-nosubprocess"
         };
-        
+
+        if (AppSettings.Default.PreferHostname)
+            startInfo.Arguments += " -preferhostname";
+
         startInfo.Arguments += $" -minfreememory={AppSettings.Default.WorkerMinFreeMemoryMiB}";
 
         try

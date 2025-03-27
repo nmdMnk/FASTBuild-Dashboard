@@ -46,6 +46,11 @@ internal class WorkerAgentService : IWorkerAgentService
         get => _workerAgent.GetSettings().MinimumFreeMemoryMiB;
         set => _workerAgent.SetMinimumFreeMemoryMiB(value);
     }
+    public bool PreferHostname
+    {
+        get => _workerAgent.GetSettings().PreferHostname;
+        set => _workerAgent.SetPreferHostname(value);
+    }
 
     public bool IsRunning => _workerAgent.IsRunning;
     public bool IsPendingRestart => _workerAgent.IsRunning && _workerAgent.GetSettings().SettingsAreDirty;

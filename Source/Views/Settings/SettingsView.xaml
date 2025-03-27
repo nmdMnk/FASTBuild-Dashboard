@@ -181,7 +181,7 @@
                                   Style="{StaticResource OptionRightIcon}"
                                   ToolTip="Disabled: Worker will accept no tasks&#x0a;Idle: Worker will accept tasks when PC is considered idle&#x0a;Always: Worker will accept tasks regardless of PC state&#x0a;Proportional: Worker will accept tasks proportional to PC's idle CPU power">
                                 <materialDesign:PackIcon Kind="InformationOutline"
-                                                         HorizontalAlignment="Center" />
+                                                         HorizontalAlignment="Right" />
                             </Grid>
 
                             <ComboBox SelectedIndex="{Binding WorkerMode, Mode=TwoWay}">
@@ -246,7 +246,7 @@
                                   Style="{StaticResource OptionRightIcon}"
                                   ToolTip="[Windows Only] Override the default minimum memory limit (in MiB) from the default of 1024 (1 GiB).&#x0a;When a worked has less memory available than this amount it will not accept work.&#x0a;Restart the dashboard/ worker to apply changes!">
                                 <materialDesign:PackIcon Kind="InformationOutline"
-                                                         HorizontalAlignment="Center" />
+                                                         HorizontalAlignment="Right" />
                             </Grid>
                             <TextBlock x:Name="DisplayMinFreeMemory"
                                        DockPanel.Dock="Right"
@@ -259,6 +259,24 @@
                                        AcceptsReturn="False"
                                        PreviewTextInput="WorkerMinFreeMemory_OnPreviewTextInput"/>
                         </DockPanel>
+                    </StackPanel>
+
+                    <StackPanel Style="{StaticResource OptionContainer}">
+                        <TextBlock Style="{StaticResource OptionTitle}"
+                                   Text="Prefer Hostname" />
+
+                        <Grid Style="{StaticResource OptionContent}">
+                            <Grid IsHitTestVisible="True"
+                                  Background="Transparent"
+                                  DockPanel.Dock="Right"
+                                  Style="{StaticResource OptionRightIcon}"
+                                  ToolTip="Broker filename will be the hostname instead of the IP Address">
+                                <materialDesign:PackIcon Kind="InformationOutline"
+                                                         HorizontalAlignment="Right" />
+                            </Grid>
+                            <ToggleButton x:Name="PreferHostname"
+                                          HorizontalAlignment="Left"/>
+                        </Grid>
                     </StackPanel>
 
                     <Border Style="{StaticResource Separator}" />

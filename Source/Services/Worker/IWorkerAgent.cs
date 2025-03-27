@@ -12,6 +12,7 @@ internal interface IWorkerAgent
     void SetWorkerMode(WorkerSettings.WorkerModeSetting mode);
     void SetLocalWorker(IRemoteWorkerAgent worker);
     void SetMinimumFreeMemoryMiB(uint memory);
+    void SetPreferHostname(bool preferHostname);
     void RestartWorker();
     void Initialize();
     WorkerCoreStatus[] GetStatus();

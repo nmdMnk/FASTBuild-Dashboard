@@ -9,6 +9,7 @@ internal interface IWorkerAgentService
     uint WorkerThreshold { get; set; }
     WorkerSettings.WorkerModeSetting WorkerMode { get; set; }
     uint MinFreeMemoryMiB { get; set; }
+    bool PreferHostname { get; set; }
     bool IsRunning { get; }
     bool IsPendingRestart { get; }
     event EventHandler<WorkerRunStateChangedEventArgs> WorkerRunStateChanged;

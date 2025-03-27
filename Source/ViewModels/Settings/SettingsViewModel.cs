@@ -158,7 +158,6 @@ internal sealed partial class SettingsViewModel : ValidatingScreen<SettingsViewM
         set
         {
             IoC.Get<IWorkerAgentService>().PreferHostname = value;
-            //AppSettings.Default.Save();
             NotifyOfPropertyChange();
             NotifyOfPropertyChange(nameof(WorkerStatusText));
         }

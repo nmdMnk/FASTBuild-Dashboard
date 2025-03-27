@@ -301,8 +301,8 @@ internal partial class ExternalWorkerAgent : IWorkerAgent
         var anyWorking = GetStatus().Any(c => c.State == WorkerCoreState.Working);
         if (anyWorking)
             return;
-        
-        Logger.Info("Restartng worker due to settings update");
+
+        Logger.Info("Restarting worker due to settings update");
         RestartWorker();
     }
 
